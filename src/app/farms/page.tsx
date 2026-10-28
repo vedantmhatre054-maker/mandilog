@@ -47,13 +47,13 @@ export default function FarmsPage() {
               Track your land parcels, active crops, and harvest dates
             </p>
           </div>
-          <button
-            type="button"
+          <Link
+            href="/farms/setup"
             className="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-[#246B45] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#1d5738] sm:self-auto"
           >
             <Plus className="h-4 w-4" />
             Add New Parcel
-          </button>
+          </Link>
         </header>
 
         <section

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -7,6 +8,8 @@ import {
   Gavel,
   Landmark,
   Leaf,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { isLanguageCode, languages, useLanguage } from '@/lib/i18n';
 
@@ -55,6 +58,29 @@ const features = [
 
 export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    try {
+      const savedTheme = window.localStorage.getItem('mandilog-theme');
+      const nextTheme = savedTheme === 'dark' ? 'dark' : 'light';
+      setTheme(nextTheme);
+      document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+    } catch (error) {
+      console.error('Could not load the saved theme preference.', error);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+    try {
+      window.localStorage.setItem('mandilog-theme', nextTheme);
+    } catch (error) {
+      console.error('Could not save the theme preference.', error);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
@@ -95,6 +121,18 @@ export default function HomePage() {
                 </option>
               ))}
             </select>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#DFE5DA] bg-white text-[#246B45]"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </button>
             <Link
               href="/login"
               className="inline-flex items-center gap-2 rounded-xl bg-[#246B45] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1d5738]"

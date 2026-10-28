@@ -1,11 +1,38 @@
 'use client';
 
 import Link from 'next/link';
-import { Sprout } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Moon, Sprout, Sun } from 'lucide-react';
 import { isLanguageCode, languages, useLanguage } from '@/lib/i18n';
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    try {
+      const savedTheme = window.localStorage.getItem('mandilog-theme');
+      const initialTheme = savedTheme === 'dark' ? 'dark' : 'light';
+      setTheme(initialTheme);
+      document.documentElement.classList.toggle(
+        'dark',
+        initialTheme === 'dark',
+      );
+    } catch (error) {
+      console.error('Could not load the saved theme preference.', error);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+    try {
+      window.localStorage.setItem('mandilog-theme', nextTheme);
+    } catch (error) {
+      console.error('Could not save the theme preference.', error);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#DFE5DA] bg-white py-3.5 shadow-sm">
@@ -46,6 +73,20 @@ export default function Navbar() {
               </option>
             ))}
           </select>
+
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#DFE5DA] bg-white text-[#246B45] transition-colors hover:bg-[#E8EFE4]"
+          >
+            {theme === 'dark' ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </button>
 
           <div className="flex items-center gap-1.5 rounded-xl border border-[#DFE5DA] bg-white px-3 py-2 text-sm font-medium text-[#26352B]">
             <span aria-hidden="true">📍</span>

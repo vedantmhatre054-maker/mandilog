@@ -1,24 +1,29 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
+import {
+  getLocalAuctionOffers,
+  getLocalMarketplaceListings,
+  saveLocalAuctionOffers,
+  type LocalAuctionOffer,
+  type LocalMarketplaceListing,
+} from '@/lib/auction';
 
 interface BidEntry {
   id: string;
   buyer: string;
   amount: number;
   time: string;
-  isYou?: boolean;
 }
 
 export default function LiveAuctionRoomPage() {
   const params = useParams();
   const lotSlug = (params?.id as string) || 'lot-1';
 
-  // Lot Details (customized per lot or defaulted to Tomatoes)
-  const lotData = {
+  const sampleLotData = {
     'lot-1': {
       lotCode: 'LOT #TM-894',
       title: 'Fresh Tomatoes (Grade A)',
@@ -68,64 +73,129 @@ export default function LiveAuctionRoomPage() {
     specs: 'Abhinav F1 • Firm Red • Moisture < 8% • APMC Sorted',
   };
 
-  // Live bidding state
-  const [highestOffer, setHighestOffer] = useState<number>(lotData.initialBid);
-  const [bidInput, setBidInput] = useState<number>(lotData.initialBid + 1);
-  const [bidsLedger, setBidsLedger] = useState<BidEntry[]>([
-    {
-      id: 'bid-1',
-      buyer: 'APMC Trader #104',
-      amount: lotData.initialBid,
-      time: '4 mins ago',
-    },
-    {
-      id: 'bid-2',
-      buyer: 'Pune Hotel Mart',
-      amount: lotData.initialBid - 1,
-      time: '12 mins ago',
-    },
-    {
-      id: 'bid-3',
-      buyer: 'Vashi Wholesaler #8',
-      amount: lotData.initialBid - 2,
-      time: '25 mins ago',
-    },
-  ]);
+  const [savedListing, setSavedListing] =
+    useState<LocalMarketplaceListing | null>(null);
+  const lotData = savedListing
+    ? {
+        ...sampleLotData,
+        lotCode: savedListing.id,
+        title: savedListing.title,
+        farmer: savedListing.farmer,
+        location: savedListing.location,
+        quantity: savedListing.quantity,
+        floorRate: savedListing.floorPrice,
+        initialBid: savedListing.floorPrice,
+        emoji: savedListing.imageEmoji,
+        specs: 'Farmer-provided listing details; not independently verified.',
+      }
+    : sampleLotData;
 
-  // Order confirmation state
+  const [highestOffer, setHighestOffer] = useState<number>(lotData.floorRate);
+  const [bidInput, setBidInput] = useState<number>(lotData.floorRate + 1);
+  const [bidsLedger, setBidsLedger] = useState<BidEntry[]>([]);
+
   const [isOrderConfirmed, setIsOrderConfirmed] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [storageNotice, setStorageNotice] = useState('');
 
-  // Handle Placing Counter-Bid
+  useEffect(() => {
+    try {
+      const listing = getLocalMarketplaceListings().find(
+        (candidate) => candidate.slug === lotSlug,
+      );
+      if (listing) {
+        setSavedListing(listing);
+        setHighestOffer(listing.floorPrice);
+        setBidInput(listing.floorPrice + 1);
+      }
+      const offers: LocalAuctionOffer[] = getLocalAuctionOffers(lotSlug);
+      setBidsLedger(
+        offers
+          .slice()
+          .reverse()
+          .map((offer) => ({
+            id: offer.id,
+            buyer: offer.buyer,
+            amount: offer.amount,
+            time: new Date(offer.createdAt).toLocaleString(),
+          })),
+      );
+      if (offers.length > 0) {
+        setHighestOffer(Math.max(...offers.map((offer) => offer.amount)));
+      }
+    } catch (error) {
+      console.error('Could not load local auction data.', error);
+      setStorageNotice('Local auction history could not be loaded.');
+    }
+  }, [lotSlug]);
+
   const handlePlaceBid = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
-    if (bidInput <= highestOffer) {
+    if (
+      !Number.isFinite(bidInput) ||
+      bidInput <= 0 ||
+      (bidsLedger.length > 0
+        ? bidInput <= highestOffer
+        : bidInput < lotData.floorRate)
+    ) {
       setErrorMessage(
-        `Bid must be higher than the current offer of ₹${highestOffer}/kg.`
+        bidsLedger.length > 0
+          ? `Offer must be higher than ₹${highestOffer}/kg.`
+          : `Offer must meet the reserve price of ₹${lotData.floorRate}/kg.`,
       );
       return;
     }
 
     const newOffer = Number(bidInput);
-    setHighestOffer(newOffer);
-
-    const newEntry: BidEntry = {
-      id: Date.now().toString(),
-      buyer: 'You (Authorized Buyer)',
+    const storedOffer: LocalAuctionOffer = {
+      id: `${Date.now()}`,
+      buyer: 'Buyer offer (this browser)',
       amount: newOffer,
-      time: 'Just now',
-      isYou: true,
+      createdAt: new Date().toISOString(),
     };
-
-    setBidsLedger([newEntry, ...bidsLedger]);
-    setBidInput(newOffer + 1);
+    try {
+      const offers = [...getLocalAuctionOffers(lotSlug), storedOffer];
+      saveLocalAuctionOffers(lotSlug, offers);
+      const newEntry: BidEntry = {
+        id: storedOffer.id,
+        buyer: storedOffer.buyer,
+        amount: storedOffer.amount,
+        time: new Date(storedOffer.createdAt).toLocaleString(),
+      };
+      setHighestOffer(newOffer);
+      setBidsLedger((current) => [newEntry, ...current]);
+      setBidInput(newOffer + 1);
+    } catch (error) {
+      console.error('Could not save local auction offer.', error);
+      setErrorMessage(
+        'Could not save this offer in the browser. Check storage and retry.',
+      );
+    }
   };
 
-  // Handle Farmer Acceptance
   const handleAcceptOffer = () => {
+    if (bidsLedger.length === 0) return;
     setIsOrderConfirmed(true);
+    const gatePass = [
+      'MANDILOG — LOCAL DEMO GATE PASS',
+      `Lot: ${lotData.lotCode}`,
+      `Crop: ${lotData.title}`,
+      `Quantity: ${lotData.quantity}`,
+      `Accepted offer: ₹${highestOffer}/kg`,
+      `Prepared: ${new Date().toLocaleString()}`,
+      '',
+      'Draft for demonstration only. Not an official APMC gate pass or order.',
+    ].join('\n');
+    const url = URL.createObjectURL(
+      new Blob([gatePass], { type: 'text/plain;charset=utf-8' }),
+    );
+    const download = document.createElement('a');
+    download.href = url;
+    download.download = `${lotData.lotCode}-draft-gate-pass.txt`;
+    download.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -133,6 +203,11 @@ export default function LiveAuctionRoomPage() {
       <Navbar />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {storageNotice && (
+          <p role="status" className="rounded-xl bg-[#E8EFE4] p-3 text-sm text-[#246B45]">
+            {storageNotice}
+          </p>
+        )}
         {/* Navigation & Screen Breadcrumb */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Link
@@ -144,7 +219,7 @@ export default function LiveAuctionRoomPage() {
           </Link>
 
           <div className="text-xs text-[#26352B]/70 font-medium">
-            Screen 10a • Live Auction Room
+            Local auction demo · offers stay in this browser
           </div>
         </div>
 
@@ -158,14 +233,14 @@ export default function LiveAuctionRoomPage() {
               <div className="flex-1">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h2 className="font-serif text-2xl font-bold text-[#26352B]">
-                    Deal Confirmed! Mandi Gate Pass Generated
+                    Offer Accepted · Draft Gate Pass Generated
                   </h2>
                   <span className="bg-[#246B45] text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    ORDER #ML-ORD-9281
+                    LOCAL DEMO
                   </span>
                 </div>
                 <p className="text-sm text-[#26352B]/90 mt-1">
-                  Offer accepted at <strong>₹{highestOffer}/kg</strong>. Ramesh Patil will prepare {lotData.quantity} for dispatch. Payment is securely held in APMC escrow settlement.
+                  Offer accepted at <strong>₹{highestOffer}/kg</strong> in this browser demo. The downloadable gate-pass draft is not an official APMC document, and no order, payment, or buyer notification was created.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4 pt-3 border-t border-[#DFE5DA] text-xs">
@@ -176,9 +251,16 @@ export default function LiveAuctionRoomPage() {
                     </strong>
                   </div>
                   <div className="p-2.5 bg-white rounded-xl border border-[#DFE5DA]">
-                    <span className="text-[#26352B]/60 block">Est. Settlement Total:</span>
+                    <span className="text-[#26352B]/60 block">Example Gross Value:</span>
                     <strong className="text-[#26352B] text-sm">
-                      ₹{(highestOffer * 500).toLocaleString('en-IN')}
+                      ₹{(
+                        highestOffer *
+                        Number(
+                          lotData.quantity
+                            .match(/[\d,]+/)?.[0]
+                            ?.replaceAll(',', '') ?? 0,
+                        )
+                      ).toLocaleString('en-IN')}
                     </strong>
                   </div>
                   <div className="p-2.5 bg-white rounded-xl border border-[#DFE5DA]">
@@ -211,7 +293,7 @@ export default function LiveAuctionRoomPage() {
             <div className="bg-[#E8EFE4] rounded-xl h-48 flex flex-col items-center justify-center text-sm font-medium text-[#26352B] border border-[#DFE5DA] relative overflow-hidden">
               <span className="text-7xl select-none mb-1">{lotData.emoji}</span>
               <span className="bg-white/80 px-3 py-1 rounded-full text-xs font-semibold text-[#246B45] border border-[#DFE5DA]">
-                Verified APMC Physical Inspection Passed
+                Sample listing · inspection not verified
               </span>
             </div>
 
@@ -252,7 +334,7 @@ export default function LiveAuctionRoomPage() {
             <div className="p-3 bg-[#E8EFE4]/60 rounded-xl border border-[#DFE5DA] text-xs text-[#26352B]/80 flex items-center gap-2">
               <span className="text-lg">🛡️</span>
               <span>
-                100% Guaranteed delivery. Farmer Ramesh Patil has completed 24 successful MandiLog auctions with 4.9★ rating.
+                Listing information is sample data or farmer-entered. MandiLog is not connected to buyer verification, delivery guarantees, or payment settlement.
               </span>
             </div>
           </div>
@@ -262,13 +344,20 @@ export default function LiveAuctionRoomPage() {
             {/* Top Banner: Current Highest Offer */}
             <div className="bg-[#E8EFE4] rounded-xl p-5 text-center border border-[#DFE5DA]">
               <div className="text-xs font-semibold text-[#26352B] uppercase tracking-wider">
-                CURRENT HIGHEST OFFER
+                {bidsLedger.length > 0 ? 'CURRENT HIGHEST OFFER' : 'NO OFFERS YET'}
               </div>
               <div className="font-bold text-3xl sm:text-4xl text-[#246B45] mt-1">
-                ₹{highestOffer} <span className="text-base font-normal text-[#26352B]">/ kg</span>
+                {bidsLedger.length > 0 ? `₹${highestOffer}` : '—'}{' '}
+                {bidsLedger.length > 0 && (
+                  <span className="text-base font-normal text-[#26352B]">
+                    / kg
+                  </span>
+                )}
               </div>
               <div className="text-xs text-[#26352B]/70 mt-1">
-                Active Bidders: 4 Verified APMC Traders
+                {bidsLedger.length > 0
+                  ? 'Offers saved locally in this browser'
+                  : `Reserve price: ₹${lotData.floorRate}/kg · no buyer network connected`}
               </div>
             </div>
 
@@ -285,7 +374,12 @@ export default function LiveAuctionRoomPage() {
                   </span>
                   <input
                     type="number"
-                    min={highestOffer + 1}
+                    min={
+                      bidsLedger.length > 0
+                        ? highestOffer + 0.01
+                        : lotData.floorRate
+                    }
+                    step="0.01"
                     value={bidInput}
                     onChange={(e) => setBidInput(Number(e.target.value))}
                     className="w-full bg-[#F7F8F2] border border-[#DFE5DA] rounded-xl pl-8 pr-3.5 py-3 font-semibold text-[#26352B] text-base focus:outline-none focus:ring-2 focus:ring-[#246B45] focus:border-transparent transition-all"
@@ -295,7 +389,7 @@ export default function LiveAuctionRoomPage() {
                   type="submit"
                   className="bg-[#246B45] hover:bg-[#1e5838] text-white font-semibold rounded-xl px-6 py-3 transition-colors text-sm sm:text-base whitespace-nowrap shadow-sm"
                 >
-                  PLACE BID
+                  Submit Local Offer
                 </button>
               </div>
 
@@ -310,15 +404,20 @@ export default function LiveAuctionRoomPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between pb-2 border-b border-[#DFE5DA]">
                 <h3 className="font-serif text-lg font-bold text-[#26352B] flex items-center gap-2">
-                  <span>Live Bid Ledger</span>
-                  <span className="w-2 h-2 rounded-full bg-[#76A94C] animate-pulse"></span>
+                  <span>Offer Ledger</span>
                 </h3>
                 <span className="text-xs text-[#26352B]/70 font-medium">
-                  {bidsLedger.length} bids placed
+                  {bidsLedger.length} local{' '}
+                  {bidsLedger.length === 1 ? 'offer' : 'offers'}
                 </span>
               </div>
 
               <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                {bidsLedger.length === 0 && (
+                  <p className="rounded-xl bg-[#F7F8F2] p-3 text-sm text-[#26352B]/70">
+                    No offers have been submitted for this lot in this browser.
+                  </p>
+                )}
                 {bidsLedger.map((bid, index) => (
                   <div
                     key={bid.id}
@@ -355,12 +454,12 @@ export default function LiveAuctionRoomPage() {
             {/* Farmer Offer Acceptance Action */}
             <div className="pt-2 border-t border-[#DFE5DA]">
               <div className="text-xs text-[#26352B]/70 mb-2 font-medium">
-                Farmer Ramesh Patil Action:
+                Farmer action (local demo):
               </div>
               <button
                 type="button"
                 onClick={handleAcceptOffer}
-                disabled={isOrderConfirmed}
+                disabled={isOrderConfirmed || bidsLedger.length === 0}
                 className={`w-full font-semibold rounded-xl py-3.5 transition-all text-sm sm:text-base flex items-center justify-center gap-2 shadow-sm ${
                   isOrderConfirmed
                     ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
@@ -371,7 +470,7 @@ export default function LiveAuctionRoomPage() {
                 <span>
                   {isOrderConfirmed
                     ? 'Offer Accepted & Order Confirmed'
-                    : `Accept Highest Offer (₹${highestOffer}/kg)`}
+                    : `Accept Offer & Generate Gate Pass (₹${highestOffer}/kg)`}
                 </span>
               </button>
             </div>
@@ -381,4 +480,3 @@ export default function LiveAuctionRoomPage() {
     </div>
   );
 }
-

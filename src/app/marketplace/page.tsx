@@ -1,30 +1,37 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import {
+  getLocalMarketplaceListings,
+  saveLocalMarketplaceListing,
+  type AuctionCategory,
+  type LocalMarketplaceListing,
+} from '@/lib/auction';
 
-interface AuctionItem {
-  id: string;
-  slug: string;
-  title: string;
-  category: 'Vegetables' | 'Fruits' | 'Grains';
-  grade: string;
-  quantity: string;
-  location: string;
-  currentBid: number;
-  floorPrice: number;
-  totalBids: number;
-  timeLeft: string;
-  farmer: string;
-  imageEmoji: string;
-}
+type AuctionItem = LocalMarketplaceListing;
 
 export default function MarketplacePage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
+  const [localListings, setLocalListings] = useState<AuctionItem[]>([]);
+  const [newTitle, setNewTitle] = useState('Tomato (Abhinav F1)');
+  const [newQuantity, setNewQuantity] = useState('500');
+  const [newFloorPrice, setNewFloorPrice] = useState('18');
+  const [newLocation, setNewLocation] = useState('Junnar, Pune');
+  const [listingNotice, setListingNotice] = useState('');
 
-  const auctions: AuctionItem[] = [
+  useEffect(() => {
+    try {
+      setLocalListings(getLocalMarketplaceListings());
+    } catch (error) {
+      console.error('Could not load local auction listings.', error);
+      setListingNotice('Saved local listings could not be loaded.');
+    }
+  }, []);
+
+  const sampleAuctions: AuctionItem[] = [
     {
       id: 'LOT-TM-894',
       slug: 'lot-1',
@@ -33,9 +40,9 @@ export default function MarketplacePage() {
       grade: 'Grade A',
       quantity: '500 kg (25 Crates)',
       location: 'Junnar, Pune',
-      currentBid: 22,
+      currentBid: 0,
       floorPrice: 18,
-      totalBids: 8,
+      totalBids: 0,
       timeLeft: '2h 30m left',
       farmer: 'Ramesh Patil',
       imageEmoji: '🍅',
@@ -48,9 +55,9 @@ export default function MarketplacePage() {
       grade: 'Garwa Quality',
       quantity: '300 kg (6 Bags)',
       location: 'Narayangaon, Pune',
-      currentBid: 28,
+      currentBid: 0,
       floorPrice: 22,
-      totalBids: 12,
+      totalBids: 0,
       timeLeft: '5h 15m left',
       farmer: 'Suresh Shinde',
       imageEmoji: '🧅',
@@ -63,21 +70,94 @@ export default function MarketplacePage() {
       grade: 'Cleaned/Sorted',
       quantity: '1,000 kg',
       location: 'Shirur, Pune',
-      currentBid: 32,
+      currentBid: 0,
       floorPrice: 26,
-      totalBids: 15,
+      totalBids: 0,
       timeLeft: '1d 4h left',
       farmer: 'Dattatray Kadam',
       imageEmoji: '🌾',
     },
   ];
 
+  const auctions = [...localListings, ...sampleAuctions];
   const categories = ['All', 'Vegetables', 'Fruits', 'Grains'];
 
   const filteredAuctions =
     selectedCategory === 'All'
       ? auctions
       : auctions.filter((item) => item.category === selectedCategory);
+
+  const publishListing = () => {
+    const quantity = Number(newQuantity);
+    const floorPrice = Number(newFloorPrice);
+    const title = newTitle.trim();
+    const location = newLocation.trim();
+    if (
+      !title ||
+      !location ||
+      !Number.isFinite(quantity) ||
+      quantity <= 0 ||
+      !Number.isFinite(floorPrice) ||
+      floorPrice <= 0
+    ) {
+      setListingNotice('Enter a crop, positive quantity, price, and location.');
+      return;
+    }
+
+    const lowerTitle = title.toLowerCase();
+    const category: AuctionCategory = /wheat|grain|soy|गेहूं|गहू/.test(
+      lowerTitle,
+    )
+      ? 'Grains'
+      : /fruit|mango|grape|apple|फळ|आंबा/.test(lowerTitle)
+        ? 'Fruits'
+        : 'Vegetables';
+    try {
+      let farmer = 'Farmer';
+      const profileRaw = window.localStorage.getItem('mandilog-profile');
+      if (profileRaw) {
+        const profile: unknown = JSON.parse(profileRaw);
+        if (
+          typeof profile === 'object' &&
+          profile !== null &&
+          'name' in profile &&
+          typeof profile.name === 'string' &&
+          profile.name.trim()
+        ) {
+          farmer = profile.name.trim();
+        }
+      }
+
+      const slug = `local-${Date.now()}`;
+      const listing: AuctionItem = {
+        id: `LOCAL-${Date.now()}`,
+        slug,
+        title,
+        category,
+        grade: 'Farmer listed',
+        quantity: `${quantity.toLocaleString('en-IN')} kg`,
+        location,
+        currentBid: 0,
+        floorPrice,
+        totalBids: 0,
+        timeLeft: 'Open until closed',
+        farmer,
+        imageEmoji:
+          category === 'Grains' ? '🌾' : category === 'Fruits' ? '🍎' : '🥬',
+      };
+      saveLocalMarketplaceListing(listing);
+      setLocalListings((current) => [listing, ...current]);
+      setListingNotice(
+        'Listing saved in this browser only. It is not sent to buyers or an APMC network.',
+      );
+      setShowCreateModal(false);
+    } catch (error) {
+      console.error('Could not save local auction listing.', error);
+      setListingNotice(
+        'Could not save listing. Check browser storage and retry.',
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F7F8F2] text-[#26352B] flex flex-col font-sans">
@@ -88,15 +168,24 @@ export default function MarketplacePage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-[#DFE5DA]">
           <div>
             <div className="inline-block bg-[#E8EFE4] text-[#246B45] text-xs font-semibold px-3 py-1 rounded-full mb-2">
-              Screen 10 • APMC Spot Bidding
+              Local auction demo
             </div>
             <h1 className="font-serif text-3xl sm:text-4xl text-[#26352B] tracking-tight">
               Live Produce Auctions
             </h1>
             <p className="text-sm sm:text-base text-[#26352B]/80 mt-1">
-              Verified buyers bidding on fresh harvest
+              Sample lots and browser-local listings. No buyer network is connected.
             </p>
           </div>
+
+          {listingNotice && (
+            <p
+              role="status"
+              className="rounded-xl bg-[#E8EFE4] p-3 text-sm text-[#246B45]"
+            >
+              {listingNotice}
+            </p>
+          )}
 
           <div className="flex items-center gap-3">
             <button
@@ -205,15 +294,20 @@ export default function MarketplacePage() {
                 <div className="mt-4 p-3 bg-[#E8EFE4] rounded-xl border border-[#DFE5DA] flex items-center justify-between">
                   <div>
                     <div className="text-[10px] uppercase font-bold tracking-wider text-[#26352B]/70">
-                      Current Bid
+                      Indicative Reference Rate
                     </div>
                     <div className="text-2xl font-bold text-[#246B45]">
-                      ₹{card.currentBid} <span className="text-xs font-normal text-[#26352B]">/ kg</span>
+                      ₹{card.currentBid || card.floorPrice}{' '}
+                      <span className="text-xs font-normal text-[#26352B]">
+                        / kg
+                      </span>
                     </div>
                   </div>
                   <div className="text-right">
                     <span className="inline-block bg-[#76A94C] text-white text-[11px] font-bold px-2 py-0.5 rounded-full">
-                      {card.totalBids} bids
+                      {card.totalBids > 0
+                        ? `${card.totalBids} sample offers`
+                        : 'No local offers'}
                     </span>
                   </div>
                 </div>
@@ -256,7 +350,8 @@ export default function MarketplacePage() {
                   </label>
                   <input
                     type="text"
-                    defaultValue="Tomato (Abhinav F1)"
+                    value={newTitle}
+                    onChange={(event) => setNewTitle(event.target.value)}
                     className="w-full bg-[#F7F8F2] border border-[#DFE5DA] rounded-xl p-2.5 text-sm"
                   />
                 </div>
@@ -267,7 +362,9 @@ export default function MarketplacePage() {
                     </label>
                     <input
                       type="number"
-                      defaultValue="500"
+                      min="1"
+                      value={newQuantity}
+                      onChange={(event) => setNewQuantity(event.target.value)}
                       className="w-full bg-[#F7F8F2] border border-[#DFE5DA] rounded-xl p-2.5 text-sm"
                     />
                   </div>
@@ -277,7 +374,12 @@ export default function MarketplacePage() {
                     </label>
                     <input
                       type="number"
-                      defaultValue="18"
+                      min="0.01"
+                      step="0.01"
+                      value={newFloorPrice}
+                      onChange={(event) =>
+                        setNewFloorPrice(event.target.value)
+                      }
                       className="w-full bg-[#F7F8F2] border border-[#DFE5DA] rounded-xl p-2.5 text-sm"
                     />
                   </div>
@@ -288,11 +390,18 @@ export default function MarketplacePage() {
                   </label>
                   <input
                     type="text"
-                    defaultValue="Junnar, Pune"
+                    value={newLocation}
+                    onChange={(event) => setNewLocation(event.target.value)}
                     className="w-full bg-[#F7F8F2] border border-[#DFE5DA] rounded-xl p-2.5 text-sm"
                   />
                 </div>
               </div>
+
+              {listingNotice && (
+                <p role="status" className="text-sm text-[#246B45]">
+                  {listingNotice}
+                </p>
+              )}
 
               <div className="pt-2 flex gap-3">
                 <button
@@ -304,13 +413,10 @@ export default function MarketplacePage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    alert('Produce listing published to APMC verified buyers network!');
-                    setShowCreateModal(false);
-                  }}
+                  onClick={publishListing}
                   className="flex-1 bg-[#246B45] text-white font-semibold rounded-xl py-2.5 text-sm"
                 >
-                  Publish Listing
+                  Save Local Listing
                 </button>
               </div>
             </div>
@@ -320,4 +426,3 @@ export default function MarketplacePage() {
     </div>
   );
 }
-
