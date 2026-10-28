@@ -23,7 +23,7 @@ const features = [
   },
   {
     title: 'Live Produce Auctions',
-    translationKey: undefined,
+    translationKey: 'sellCrop',
     description:
       'Let verified buyers bid on your harvest from anywhere. No need to dump produce at low prices.',
     href: '/marketplace',
@@ -227,9 +227,7 @@ export default function HomePage() {
                     {feature.label}
                   </p>
                   <h3 className="mt-1 font-serif text-2xl tracking-tight">
-                    {feature.translationKey
-                      ? t(feature.translationKey)
-                      : feature.title}
+                    {t(feature.translationKey)}
                   </h3>
                   <p className="mt-2 leading-7 text-[#26352B]/75">
                     {feature.description}
@@ -255,7 +253,7 @@ export default function HomePage() {
             href="/login"
             className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-[#246B45] transition-colors hover:bg-[#F7F8F2]"
           >
-            Open Farmer Dashboard
+            {t('enterDashboard')}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </section>

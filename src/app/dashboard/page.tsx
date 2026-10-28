@@ -81,10 +81,14 @@ export default function DashboardPage() {
     if (legacyName?.trim()) setProfileName(legacyName.trim());
   }, []);
 
+  const greetingText = t('greeting');
+  const greetingPrefix = greetingText
+    .replace(/[,،，][^,،，]+[!؟.!?۔]*$/u, '')
+    .trim();
   const greeting =
     profileName === 'Farmer'
-      ? t('greeting')
-      : t('greeting').replace(/,[^,]*!$/u, `, ${profileName}!`);
+      ? greetingText
+      : `${greetingPrefix}, ${profileName}!`;
 
   return (
     <div className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
@@ -164,7 +168,7 @@ export default function DashboardPage() {
                 href="/calculator"
                 className="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-[#246B45] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1d5738] sm:self-center"
               >
-                Open Profit Calculator <span aria-hidden="true">-&gt;</span>
+                {t('profitCalc')} <span aria-hidden="true">-&gt;</span>
               </Link>
             </div>
           </div>

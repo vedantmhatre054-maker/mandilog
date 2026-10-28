@@ -50,10 +50,13 @@ export const translations = {
     cropDoctor: 'Crop Doctor',
     govtSchemes: 'Govt. Schemes',
     profitCalc: 'Profit Calculator',
-    loginTitle: 'Welcome to MandiLog',
+    loginTitle: 'Farmer Login & Registration',
     getStarted: 'Get Started',
     enterPhone: 'Enter Mobile Number',
     yourName: 'Your Full Name',
+    enterDashboard: 'Enter Dashboard',
+    mobileNumber: 'Mobile Number',
+    fullName: 'Full Name',
   },
   hi: {
     brandTagline: 'समझदारी से बेचें। बेहतर खेती करें। साथ मिलकर आगे बढ़ें।',
@@ -63,10 +66,13 @@ export const translations = {
     cropDoctor: 'फसल डॉक्टर',
     govtSchemes: 'सरकारी योजनाएँ',
     profitCalc: 'मुनाफ़ा कैलकुलेटर',
-    loginTitle: 'MandiLog में आपका स्वागत है',
+    loginTitle: 'किसान लॉगिन और पंजीकरण',
     getStarted: 'शुरू करें',
     enterPhone: 'मोबाइल नंबर दर्ज करें',
     yourName: 'आपका पूरा नाम',
+    enterDashboard: 'डैशबोर्ड पर जाएँ',
+    mobileNumber: 'मोबाइल नंबर',
+    fullName: 'पूरा नाम',
   },
   mr: {
     brandTagline: 'विचारपूर्वक विक्री करा. उत्तम शेती करा. एकत्र प्रगती करा.',
@@ -76,10 +82,13 @@ export const translations = {
     cropDoctor: 'पीक डॉक्टर',
     govtSchemes: 'सरकारी योजना',
     profitCalc: 'नफा कॅल्क्युलेटर',
-    loginTitle: 'MandiLog मध्ये आपले स्वागत आहे',
+    loginTitle: 'शेतकरी लॉगिन आणि नोंदणी',
     getStarted: 'सुरू करा',
     enterPhone: 'मोबाइल क्रमांक टाका',
     yourName: 'तुमचे पूर्ण नाव',
+    enterDashboard: 'डॅशबोर्डवर जा',
+    mobileNumber: 'मोबाइल क्रमांक',
+    fullName: 'पूर्ण नाव',
   },
   pa: {
     brandTagline: 'ਸਮਝਦਾਰੀ ਨਾਲ ਵੇਚੋ। ਵਧੀਆ ਖੇਤੀ ਕਰੋ। ਇਕੱਠੇ ਤਰੱਕੀ ਕਰੋ।',
@@ -89,10 +98,13 @@ export const translations = {
     cropDoctor: 'ਫ਼ਸਲ ਡਾਕਟਰ',
     govtSchemes: 'ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ',
     profitCalc: 'ਮੁਨਾਫ਼ਾ ਕੈਲਕੁਲੇਟਰ',
-    loginTitle: 'MandiLog ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ',
+    loginTitle: 'ਕਿਸਾਨ ਲੌਗਇਨ ਅਤੇ ਰਜਿਸਟ੍ਰੇਸ਼ਨ',
     getStarted: 'ਸ਼ੁਰੂ ਕਰੋ',
     enterPhone: 'ਮੋਬਾਈਲ ਨੰਬਰ ਦਰਜ ਕਰੋ',
     yourName: 'ਤੁਹਾਡਾ ਪੂਰਾ ਨਾਮ',
+    enterDashboard: 'ਡੈਸ਼ਬੋਰਡ ਖੋਲ੍ਹੋ',
+    mobileNumber: 'ਮੋਬਾਈਲ ਨੰਬਰ',
+    fullName: 'ਪੂਰਾ ਨਾਮ',
   },
   bn: {
     brandTagline: 'বুদ্ধি করে বিক্রি করুন। ভালো চাষ করুন। একসঙ্গে এগিয়ে চলুন।',
@@ -102,10 +114,13 @@ export const translations = {
     cropDoctor: 'ফসলের ডাক্তার',
     govtSchemes: 'সরকারি প্রকল্প',
     profitCalc: 'লাভের হিসাব',
-    loginTitle: 'MandiLog-এ স্বাগতম',
+    loginTitle: 'কৃষক লগইন ও নিবন্ধন',
     getStarted: 'শুরু করুন',
     enterPhone: 'মোবাইল নম্বর লিখুন',
     yourName: 'আপনার পুরো নাম',
+    enterDashboard: 'ড্যাশবোর্ডে যান',
+    mobileNumber: 'মোবাইল নম্বর',
+    fullName: 'পুরো নাম',
   },
   gu: {
     brandTagline: 'સમજદારીથી વેચો. સારી ખેતી કરો. સાથે મળીને આગળ વધો.',
@@ -115,10 +130,13 @@ export const translations = {
     cropDoctor: 'પાક ડૉક્ટર',
     govtSchemes: 'સરકારી યોજનાઓ',
     profitCalc: 'નફાની ગણતરી',
-    loginTitle: 'MandiLogમાં આપનું સ્વાગત છે',
+    loginTitle: 'ખેડૂત લૉગિન અને નોંધણી',
     getStarted: 'શરૂ કરો',
     enterPhone: 'મોબાઇલ નંબર દાખલ કરો',
     yourName: 'તમારું પૂરું નામ',
+    enterDashboard: 'ડેશબોર્ડ ખોલો',
+    mobileNumber: 'મોબાઇલ નંબર',
+    fullName: 'પૂરું નામ',
   },
   ta: {
     brandTagline: 'சிந்தித்து விற்கவும். சிறப்பாக விவசாயம் செய்யவும். ஒன்றாக வளரவும்.',
@@ -128,10 +146,13 @@ export const translations = {
     cropDoctor: 'பயிர் மருத்துவர்',
     govtSchemes: 'அரசுத் திட்டங்கள்',
     profitCalc: 'லாபக் கணக்கீடு',
-    loginTitle: 'MandiLog-க்கு வரவேற்கிறோம்',
+    loginTitle: 'விவசாயி உள்நுழைவு மற்றும் பதிவு',
     getStarted: 'தொடங்குங்கள்',
     enterPhone: 'மொபைல் எண்ணை உள்ளிடவும்',
     yourName: 'உங்கள் முழுப் பெயர்',
+    enterDashboard: 'டாஷ்போர்டுக்குச் செல்லவும்',
+    mobileNumber: 'மொபைல் எண்',
+    fullName: 'முழுப் பெயர்',
   },
   te: {
     brandTagline: 'తెలివిగా అమ్మండి. మెరుగ్గా సాగు చేయండి. కలిసి ఎదగండి.',
@@ -141,10 +162,13 @@ export const translations = {
     cropDoctor: 'పంట వైద్యుడు',
     govtSchemes: 'ప్రభుత్వ పథకాలు',
     profitCalc: 'లాభాల లెక్కింపు',
-    loginTitle: 'MandiLogకు స్వాగతం',
+    loginTitle: 'రైతు లాగిన్ మరియు నమోదు',
     getStarted: 'ప్రారంభించండి',
     enterPhone: 'మొబైల్ నంబర్ నమోదు చేయండి',
     yourName: 'మీ పూర్తి పేరు',
+    enterDashboard: 'డాష్‌బోర్డ్‌కు వెళ్లండి',
+    mobileNumber: 'మొబైల్ నంబర్',
+    fullName: 'పూర్తి పేరు',
   },
   kn: {
     brandTagline: 'ಬುದ್ಧಿವಂತಿಕೆಯಿಂದ ಮಾರಿ. ಉತ್ತಮವಾಗಿ ಕೃಷಿ ಮಾಡಿ. ಒಟ್ಟಾಗಿ ಬೆಳೆಯಿರಿ.',
@@ -154,10 +178,13 @@ export const translations = {
     cropDoctor: 'ಬೆಳೆ ವೈದ್ಯ',
     govtSchemes: 'ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು',
     profitCalc: 'ಲಾಭದ ಲೆಕ್ಕಾಚಾರ',
-    loginTitle: 'MandiLogಗೆ ಸ್ವಾಗತ',
+    loginTitle: 'ರೈತರ ಲಾಗಿನ್ ಮತ್ತು ನೋಂದಣಿ',
     getStarted: 'ಪ್ರಾರಂಭಿಸಿ',
     enterPhone: 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ',
     yourName: 'ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರು',
+    enterDashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ತೆರೆಯಿರಿ',
+    mobileNumber: 'ಮೊಬೈಲ್ ಸಂಖ್ಯೆ',
+    fullName: 'ಪೂರ್ಣ ಹೆಸರು',
   },
   ml: {
     brandTagline: 'ബുദ്ധിപൂർവം വിൽക്കൂ. മികച്ച കൃഷി ചെയ്യൂ. ഒരുമിച്ച് വളരൂ.',
@@ -167,10 +194,13 @@ export const translations = {
     cropDoctor: 'വിള ഡോക്ടർ',
     govtSchemes: 'സർക്കാർ പദ്ധതികൾ',
     profitCalc: 'ലാഭ കണക്കുകൂട്ടൽ',
-    loginTitle: 'MandiLog-ലേക്ക് സ്വാഗതം',
+    loginTitle: 'കർഷക ലോഗിനും രജിസ്ട്രേഷനും',
     getStarted: 'തുടങ്ങുക',
     enterPhone: 'മൊബൈൽ നമ്പർ നൽകുക',
     yourName: 'നിങ്ങളുടെ മുഴുവൻ പേര്',
+    enterDashboard: 'ഡാഷ്ബോർഡിലേക്ക് പോകുക',
+    mobileNumber: 'മൊബൈൽ നമ്പർ',
+    fullName: 'മുഴുവൻ പേര്',
   },
   or: {
     brandTagline: 'ବୁଝି ବିଚାରି ବିକ୍ରି କରନ୍ତୁ। ଭଲ ଚାଷ କରନ୍ତୁ। ଏକାଠି ବଢ଼ନ୍ତୁ।',
@@ -180,10 +210,13 @@ export const translations = {
     cropDoctor: 'ଫସଲ ଡାକ୍ତର',
     govtSchemes: 'ସରକାରୀ ଯୋଜନା',
     profitCalc: 'ଲାଭ ହିସାବ',
-    loginTitle: 'MandiLogକୁ ସ୍ୱାଗତ',
+    loginTitle: 'ଚାଷୀ ଲଗଇନ୍ ଏବଂ ପଞ୍ଜୀକରଣ',
     getStarted: 'ଆରମ୍ଭ କରନ୍ତୁ',
     enterPhone: 'ମୋବାଇଲ ନମ୍ବର ଲେଖନ୍ତୁ',
     yourName: 'ଆପଣଙ୍କ ପୂରା ନାମ',
+    enterDashboard: 'ଡ୍ୟାସବୋର୍ଡକୁ ଯାଆନ୍ତୁ',
+    mobileNumber: 'ମୋବାଇଲ ନମ୍ବର',
+    fullName: 'ପୂରା ନାମ',
   },
   as: {
     brandTagline: 'বুজি-বাজি বিক্ৰী কৰক। ভাল খেতি কৰক। একেলগে আগবাঢ়ক।',
@@ -193,10 +226,13 @@ export const translations = {
     cropDoctor: 'শস্য চিকিৎসক',
     govtSchemes: 'চৰকাৰী আঁচনি',
     profitCalc: 'লাভৰ হিচাপ',
-    loginTitle: 'MandiLogলৈ স্বাগতম',
+    loginTitle: 'কৃষকৰ লগইন আৰু পঞ্জীয়ন',
     getStarted: 'আৰম্ভ কৰক',
     enterPhone: 'ম’বাইল নম্বৰ দিয়ক',
     yourName: 'আপোনাৰ সম্পূৰ্ণ নাম',
+    enterDashboard: 'ডেশ্বব’ৰ্ডলৈ যাওক',
+    mobileNumber: 'ম’বাইল নম্বৰ',
+    fullName: 'সম্পূৰ্ণ নাম',
   },
   ur: {
     brandTagline: 'سمجھداری سے بیچیں۔ بہتر کاشت کریں۔ مل کر ترقی کریں۔',
@@ -206,10 +242,13 @@ export const translations = {
     cropDoctor: 'فصل کا ڈاکٹر',
     govtSchemes: 'سرکاری اسکیمیں',
     profitCalc: 'منافع کیلکولیٹر',
-    loginTitle: 'MandiLog میں خوش آمدید',
+    loginTitle: 'کسان لاگ اِن اور رجسٹریشن',
     getStarted: 'شروع کریں',
     enterPhone: 'موبائل نمبر درج کریں',
     yourName: 'آپ کا پورا نام',
+    enterDashboard: 'ڈیش بورڈ کھولیں',
+    mobileNumber: 'موبائل نمبر',
+    fullName: 'پورا نام',
   },
   sa: {
     brandTagline: 'विवेकेन विक्रीत। उत्तमं कृषिं कुरुत। सह वर्धताम्।',
@@ -219,10 +258,13 @@ export const translations = {
     cropDoctor: 'सस्यचिकित्सकः',
     govtSchemes: 'सर्वकारीययोजनाः',
     profitCalc: 'लाभगणना',
-    loginTitle: 'MandiLog मध्ये स्वागतम्',
+    loginTitle: 'कृषकस्य प्रवेशः पञ्जीकरणं च',
     getStarted: 'आरभताम्',
     enterPhone: 'दूरवाणीसंख्यां लिखतु',
     yourName: 'भवतः पूर्णं नाम',
+    enterDashboard: 'नियन्त्रणफलकं प्रविशतु',
+    mobileNumber: 'दूरवाणीसंख्या',
+    fullName: 'पूर्णं नाम',
   },
   kok: {
     brandTagline: 'शहाणपणान विकचें. बरी शेती करची. एकठांय वाडचें.',
@@ -232,10 +274,13 @@ export const translations = {
     cropDoctor: 'पीक डॉक्टर',
     govtSchemes: 'सरकारी येवजण्यो',
     profitCalc: 'नफ्याचो हिशेब',
-    loginTitle: 'MandiLogांत तुमचें स्वागत',
+    loginTitle: 'शेतकार लॉगिन आनी नोंदणी',
     getStarted: 'सुरू करचें',
     enterPhone: 'मोबायल नंबर घालचो',
     yourName: 'तुमचें पुराय नांव',
+    enterDashboard: 'डॅशबोर्ड उगडचो',
+    mobileNumber: 'मोबायल नंबर',
+    fullName: 'पुराय नांव',
   },
   mai: {
     brandTagline: 'बुझि कऽ बेचू। नीक खेती करू। मिलि कऽ आगू बढ़ू।',
@@ -245,10 +290,13 @@ export const translations = {
     cropDoctor: 'फसल डॉक्टर',
     govtSchemes: 'सरकारी योजना',
     profitCalc: 'मुनाफा गणना',
-    loginTitle: 'MandiLog मे अहाँक स्वागत अछि',
+    loginTitle: 'किसान लॉगिन आ पंजीकरण',
     getStarted: 'शुरू करू',
     enterPhone: 'मोबाइल नंबर लिखू',
     yourName: 'अहाँक पूरा नाम',
+    enterDashboard: 'डैशबोर्ड पर जाउ',
+    mobileNumber: 'मोबाइल नंबर',
+    fullName: 'पूरा नाम',
   },
   sat: {
     brandTagline: 'ᱵᱩᱫᱷᱤ ᱛᱮ ᱟᱠᱷᱨᱤᱧ ᱵᱤᱠᱨᱤᱭᱟ। ᱵᱟᱹᱲᱛᱤ ᱪᱟᱥ ᱠᱟᱹᱢᱤᱭᱟ। ᱢᱤᱫ ᱥᱟᱶ ᱵᱟᱹᱲᱛᱤᱭᱟ।',
@@ -258,10 +306,13 @@ export const translations = {
     cropDoctor: 'ᱥᱟᱥᱟᱝ ᱰᱟᱠᱛᱟᱨ',
     govtSchemes: 'ᱥᱚᱨᱠᱟᱨᱤ ᱭᱚᱡᱚᱱᱟ',
     profitCalc: 'ᱞᱟᱵᱷ ᱦᱤᱥᱟᱵ',
-    loginTitle: 'MandiLog ᱨᱮ ᱥᱟᱹᱜᱩᱱ',
+    loginTitle: 'ᱪᱟᱥᱤ ᱞᱚᱜᱤᱱ ᱟᱨ ᱨᱮᱡᱤᱥᱴᱨᱮᱥᱚᱱ',
     getStarted: 'ᱮᱦᱚᱵ ᱢᱮ',
     enterPhone: 'ᱢᱚᱵᱟᱭᱤᱞ ᱮᱞ ᱮᱢ ᱢᱮ',
     yourName: 'ᱟᱢᱟᱜ ᱯᱩᱨᱟᱹ ᱧᱩᱛᱩᱢ',
+    enterDashboard: 'ᱰᱮᱥᱵᱚᱨᱰ ᱵᱚᱞᱚ ᱢᱮ',
+    mobileNumber: 'ᱢᱚᱵᱟᱭᱤᱞ ᱮᱞ',
+    fullName: 'ᱯᱩᱨᱟᱹ ᱧᱩᱛᱩᱢ',
   },
   doi: {
     brandTagline: 'सोच-समझियै बेचो। अच्छी खेती करो। इकठ्ठे अग्गें बधो।',
@@ -271,10 +322,13 @@ export const translations = {
     cropDoctor: 'फसल डाक्टर',
     govtSchemes: 'सरकारी योजनां',
     profitCalc: 'मुनाफे दा हिसाब',
-    loginTitle: 'MandiLog च तुंदा स्वागत ऐ',
+    loginTitle: 'किसान लॉगइन ते पंजीकरण',
     getStarted: 'शुरू करो',
     enterPhone: 'मोबाइल नंबर दर्ज करो',
     yourName: 'तुंदा पूरा नां',
+    enterDashboard: 'डैशबोर्ड खोलो',
+    mobileNumber: 'मोबाइल नंबर',
+    fullName: 'पूरा नां',
   },
   ne: {
     brandTagline: 'बुझेर बेच्नुहोस्। राम्रो खेती गर्नुहोस्। सँगै अघि बढ्नुहोस्।',
@@ -284,10 +338,13 @@ export const translations = {
     cropDoctor: 'बाली डाक्टर',
     govtSchemes: 'सरकारी योजनाहरू',
     profitCalc: 'नाफा हिसाब',
-    loginTitle: 'MandiLog मा स्वागत छ',
+    loginTitle: 'किसान लगइन र दर्ता',
     getStarted: 'सुरु गर्नुहोस्',
     enterPhone: 'मोबाइल नम्बर राख्नुहोस्',
     yourName: 'तपाईंको पूरा नाम',
+    enterDashboard: 'ड्यासबोर्ड खोल्नुहोस्',
+    mobileNumber: 'मोबाइल नम्बर',
+    fullName: 'पूरा नाम',
   },
   ks: {
     brandTagline: 'عقٕل سۭتۍ وِکرِو۔ بہتر کٔرِو کِسانی۔ اَکھ سۭتۍ بٔڑھِو۔',
@@ -297,10 +354,13 @@ export const translations = {
     cropDoctor: 'فصل ڈاکٹر',
     govtSchemes: 'سرکاری سکیم',
     profitCalc: 'منافع حساب',
-    loginTitle: 'MandiLog منز خوش آمدید',
+    loginTitle: 'کسان لاگ اِن تہٕ رجسٹریشن',
     getStarted: 'شروع کٔرِو',
     enterPhone: 'موبائل نمبر درج کٔرِو',
     yourName: 'تُہند پورٕ ناو',
+    enterDashboard: 'ڈیش بورڈ کھولِو',
+    mobileNumber: 'موبائل نمبر',
+    fullName: 'پورٕ ناو',
   },
   brx: {
     brandTagline: 'बुजिनानै बेखौ। मोजां खेति खालाम। लोगोसे बारग\'।',
@@ -310,10 +370,13 @@ export const translations = {
     cropDoctor: 'फसल डाक्टर',
     govtSchemes: 'सरकारि स्कीम',
     profitCalc: 'लाबनि हिसाब',
-    loginTitle: 'MandiLog आव बरायबाय',
+    loginTitle: 'आबादारि लगिन आरो रेजिस्टेसन',
     getStarted: 'जागाय',
     enterPhone: 'मबाइल नम्बर हो',
     yourName: 'नोंथांनि आबुं मुं',
+    enterDashboard: 'डेशबर्ड खोल',
+    mobileNumber: 'मबाइल नम्बर',
+    fullName: 'आबुं मुं',
   },
   sd: {
     brandTagline: 'سمجهه سان وڪڻو. بهتر پوکيو. گڏجي وڌو.',
@@ -323,10 +386,13 @@ export const translations = {
     cropDoctor: 'فصل جو ڊاڪٽر',
     govtSchemes: 'سرڪاري رٿائون',
     profitCalc: 'نفعي جو حساب',
-    loginTitle: 'MandiLog ۾ ڀليڪار',
+    loginTitle: 'هاري لاگ ان ۽ رجسٽريشن',
     getStarted: 'شروع ڪريو',
     enterPhone: 'موبائل نمبر داخل ڪريو',
     yourName: 'توهان جو پورو نالو',
+    enterDashboard: 'ڊيش بورڊ کوليو',
+    mobileNumber: 'موبائل نمبر',
+    fullName: 'پورو نالو',
   },
 } satisfies Record<
   LanguageCode,
@@ -342,6 +408,9 @@ export const translations = {
     getStarted: string;
     enterPhone: string;
     yourName: string;
+    enterDashboard: string;
+    mobileNumber: string;
+    fullName: string;
   }
 >;
 
@@ -360,9 +429,28 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<LanguageCode>('en');
 
   useEffect(() => {
-    const storedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (storedLanguage && isLanguageCode(storedLanguage)) {
-      setLanguageState(storedLanguage);
+    try {
+      const storedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      if (storedLanguage && isLanguageCode(storedLanguage)) {
+        setLanguageState(storedLanguage);
+        return;
+      }
+
+      const storedProfile = window.localStorage.getItem('mandilog-profile');
+      if (storedProfile) {
+        const profile: unknown = JSON.parse(storedProfile);
+        if (
+          typeof profile === 'object' &&
+          profile !== null &&
+          'language' in profile &&
+          typeof profile.language === 'string' &&
+          isLanguageCode(profile.language)
+        ) {
+          setLanguageState(profile.language);
+        }
+      }
+    } catch (error) {
+      console.error('Could not restore the saved MandiLog language.', error);
     }
   }, []);
 
@@ -373,7 +461,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = (nextLanguage: LanguageCode) => {
     setLanguageState(nextLanguage);
-    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLanguage);
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLanguage);
+    } catch (error) {
+      console.error('Could not save the MandiLog language preference.', error);
+    }
   };
 
   const value = useMemo(

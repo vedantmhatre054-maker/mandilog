@@ -3,7 +3,6 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
 import { ArrowRight, Sprout } from 'lucide-react';
 import { isLanguageCode, languages, useLanguage } from '@/lib/i18n';
 
@@ -23,69 +22,35 @@ export default function LoginPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [village, setVillage] = useState('Junnar, Pune');
+  const [storageError, setStorageError] = useState('');
 
   const submitProfile = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const existingProfile = window.localStorage.getItem('mandilog-profile');
-    let existingName = 'Farmer';
-
-    if (existingProfile) {
-      try {
-        const parsedProfile: unknown = JSON.parse(existingProfile);
-        if (
-          typeof parsedProfile === 'object' &&
-          parsedProfile !== null &&
-          'name' in parsedProfile &&
-          typeof parsedProfile.name === 'string'
-        ) {
-          existingName = parsedProfile.name;
-        }
-      } catch (error) {
-        console.error('Could not read the saved MandiLog profile.', error);
-      }
-    }
-
     const profile: FarmerProfile = {
-      name: mode === 'register' ? name.trim() : existingName,
+      name: name.trim(),
       phone: phone.replace(/\D/g, ''),
       village: village.trim(),
       language,
     };
 
-    window.localStorage.setItem('mandilog-profile', JSON.stringify(profile));
-    window.localStorage.setItem('mandilog-user', profile.name);
-    setLanguage(profile.language);
-
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    if (
-      supabaseUrl &&
-      supabaseAnonKey &&
-      !supabaseUrl.includes('your-supabase-project') &&
-      supabaseAnonKey !== 'your-anon-key-here'
-    ) {
-      const supabase = createClient(supabaseUrl, supabaseAnonKey);
-      void Promise.resolve(
-        supabase.from('mandilog_profiles').upsert(
-          {
-            name: profile.name,
-            phone: profile.phone,
-            village: profile.village,
-            language: profile.language,
-          },
-          { onConflict: 'phone' },
-        ),
-      )
-        .then(({ error }) => {
-          if (error) {
-            console.error('Could not sync the MandiLog profile to Supabase.', error);
-          }
-        })
-        .catch((error: unknown) => {
-          console.error('Could not sync the MandiLog profile to Supabase.', error);
-        });
+    if (!profile.name || profile.phone.length !== 10 || !profile.village) {
+      setStorageError('Enter your full name, a 10-digit mobile number, and village.');
+      return;
     }
 
+    try {
+      window.localStorage.setItem('mandilog-profile', JSON.stringify(profile));
+      window.localStorage.setItem('mandilog-user', profile.name);
+    } catch (error) {
+      console.error('Could not save the MandiLog profile on this device.', error);
+      setStorageError(
+        'We could not save your details on this device. Check your browser storage settings and try again.',
+      );
+      return;
+    }
+
+    setLanguage(profile.language);
+    setStorageError('');
     router.replace('/dashboard');
   };
 
@@ -144,23 +109,21 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={submitProfile} className="mt-6 space-y-4">
-          {mode === 'register' && (
-            <label className="block space-y-1.5 text-sm font-medium">
-              <span>{t('yourName')}</span>
-              <input
-                type="text"
-                autoComplete="name"
-                required
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                placeholder="e.g. Ramesh Patil"
-                className="w-full rounded-xl border border-[#DFE5DA] bg-white px-3.5 py-3 outline-none placeholder:text-[#26352B]/45 focus:border-[#246B45]"
-              />
-            </label>
-          )}
+          <label className="block space-y-1.5 text-sm font-medium">
+            <span>{t('fullName')}</span>
+            <input
+              type="text"
+              autoComplete="name"
+              required
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="e.g. Ramesh Patil"
+              className="w-full rounded-xl border border-[#DFE5DA] bg-white px-3.5 py-3 outline-none placeholder:text-[#26352B]/45 focus:border-[#246B45]"
+            />
+          </label>
 
           <label className="block space-y-1.5 text-sm font-medium">
-            <span>{t('enterPhone')}</span>
+            <span>{t('mobileNumber')}</span>
             <input
               type="tel"
               inputMode="numeric"
@@ -213,14 +176,19 @@ export default function LoginPage() {
             type="submit"
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#246B45] py-3.5 font-semibold text-white transition-colors hover:bg-[#1d5738]"
           >
-            Enter MandiLog Dashboard
+            {t('enterDashboard')}
             <ArrowRight className="h-4 w-4" />
           </button>
+          {storageError && (
+            <p role="alert" className="text-sm text-red-700">
+              {storageError}
+            </p>
+          )}
         </form>
 
         <p className="mt-4 text-center text-xs leading-5 text-[#26352B]/60">
-          No password or OTP required. Your details stay on this device unless
-          you connect a MandiLog account.
+          No password or OTP required. Your details are saved only in this
+          browser on this device.
         </p>
       </section>
     </main>
