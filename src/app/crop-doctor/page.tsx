@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   ImagePlus,
   Leaf,
+  LoaderCircle,
   Upload,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -40,6 +41,8 @@ const sampleResults = [
 export default function CropDoctorPage() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [message, setMessage] = useState('');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [diagnosisMessage, setDiagnosisMessage] = useState('');
   const uploadInput = useRef<HTMLInputElement>(null);
   const cameraInput = useRef<HTMLInputElement>(null);
 
@@ -52,6 +55,7 @@ export default function CropDoctorPage() {
 
     setSelectedImage(file);
     setMessage('');
+    setDiagnosisMessage('');
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +66,36 @@ export default function CropDoctorPage() {
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     selectImage(event.dataTransfer.files[0]);
+  };
+
+  const analyzeCrop = async () => {
+    if (!selectedImage) return;
+    setIsAnalyzing(true);
+    setDiagnosisMessage('');
+    const formData = new FormData();
+    formData.append('image', selectedImage);
+
+    try {
+      const response = await fetch('/api/crop-doctor', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        setDiagnosisMessage(
+          result.error ?? 'Crop analysis is currently unavailable.',
+        );
+        return;
+      }
+      setDiagnosisMessage('Image submitted.');
+    } catch (error) {
+      console.error('Crop image request failed.', error);
+      setDiagnosisMessage(
+        'Could not reach the crop analysis service. Check your connection and try again.',
+      );
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   return (
@@ -142,19 +176,34 @@ export default function CropDoctorPage() {
 
           <button
             type="button"
-            disabled={!selectedImage}
-            onClick={() =>
-              setMessage('Your photo is ready for crop diagnosis.')
-            }
+            disabled={!selectedImage || isAnalyzing}
+            onClick={analyzeCrop}
             className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-[#246B45] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#1d5738] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <Leaf className="h-4 w-4" />
-            Analyze Crop
+            {isAnalyzing ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" />
+            ) : (
+              <Leaf className="h-4 w-4" />
+            )}
+            {isAnalyzing ? 'Checking availability…' : 'Analyze Crop'}
           </button>
           {message && (
             <p role="status" className="mt-3 text-sm text-[#246B45]">
               {message}
             </p>
+          )}
+          {diagnosisMessage && (
+            <div
+              role="status"
+              className="mt-4 rounded-xl border border-[#DFE5DA] bg-[#F7F8F2] p-4 text-left text-sm leading-6"
+            >
+              <p className="font-semibold">Diagnosis unavailable</p>
+              <p className="mt-1 text-[#26352B]/75">{diagnosisMessage}</p>
+              <p className="mt-2 text-[#26352B]/75">
+                Avoid spraying based only on an unverified image result. Ask a
+                local agricultural extension officer if you are concerned.
+              </p>
+            </div>
           )}
         </section>
 
@@ -162,7 +211,7 @@ export default function CropDoctorPage() {
           <div className="mb-4">
             <h2 className="font-serif text-2xl">Sample Results</h2>
             <p className="mt-1 text-sm text-[#26352B]/70">
-              Examples of the insights a crop diagnosis can provide.
+              Illustrative examples only; they are not results for your photo.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

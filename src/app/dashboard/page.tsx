@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import { languages, useLanguage } from '@/lib/i18n';
+import WeatherCard from '@/components/WeatherCard';
 
 const primaryFeatures = [
   {
@@ -55,6 +56,7 @@ const quickLinks = [
 export default function DashboardPage() {
   const { language, t } = useLanguage();
   const [profileName, setProfileName] = useState('Farmer');
+  const [profileLocation, setProfileLocation] = useState('Junnar, Pune');
   const activeLanguage = languages.find((item) => item.code === language);
 
   useEffect(() => {
@@ -70,7 +72,15 @@ export default function DashboardPage() {
           profile.name.trim()
         ) {
           setProfileName(profile.name.trim());
-          return;
+        }
+        if (
+          typeof profile === 'object' &&
+          profile !== null &&
+          'village' in profile &&
+          typeof profile.village === 'string' &&
+          profile.village.trim()
+        ) {
+          setProfileLocation(profile.village.trim());
         }
       } catch (error) {
         console.error('Could not read the saved MandiLog profile.', error);
@@ -108,6 +118,8 @@ export default function DashboardPage() {
             )}
           </p>
         </header>
+
+        <WeatherCard location={profileLocation} />
 
         <section
           aria-label="Primary farmer tools"
