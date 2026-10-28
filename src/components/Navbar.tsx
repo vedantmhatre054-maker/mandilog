@@ -13,39 +13,61 @@ export default function Navbar() {
   ] as const;
 
   return (
-    <header className="w-full bg-[#f4f0ea] border-b-[3px] border-b-black sticky top-0 z-50">
+    <header className="w-full bg-[#FFFFFF] border-b border-[#DFE5DA] sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
         {/* Brand & Farmer First Tag */}
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 group cursor-pointer focus:outline-none"
+            className="flex items-center gap-2.5 group cursor-pointer focus:outline-none"
           >
-            <div className="w-10 h-10 bg-[#bbf7d0] border-[3px] border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center font-black text-xl text-black">
+            <div className="w-10 h-10 bg-[#E8EFE4] rounded-xl border border-[#DFE5DA] flex items-center justify-center text-xl text-[#246B45]">
               🌾
             </div>
-            <span className="font-black text-2xl tracking-tight text-black group-hover:underline">
+            <span className="font-serif font-bold text-2xl tracking-tight text-[#26352B] group-hover:text-[#246B45] transition-colors">
               MandiLog
             </span>
           </Link>
 
-          <span className="inline-block bg-black text-[#fef08a] px-2.5 py-0.5 text-xs font-black uppercase tracking-wider border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+          <span className="inline-block bg-[#246B45] text-white px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider rounded-full">
             FARMER FIRST
           </span>
         </div>
 
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center gap-1 font-sans text-sm font-medium text-[#26352B]">
+          <Link
+            href="/dashboard"
+            className="px-3 py-1.5 rounded-lg hover:bg-[#E8EFE4] transition-colors"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="/calculator"
+            className="px-3 py-1.5 rounded-lg hover:bg-[#E8EFE4] transition-colors"
+          >
+            Profit Calculator
+          </Link>
+          <Link
+            href="/marketplace"
+            className="px-3 py-1.5 rounded-lg hover:bg-[#E8EFE4] transition-colors"
+          >
+            Marketplace
+          </Link>
+        </nav>
+
         {/* Right Section: Greeting, Location, Language */}
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 font-sans">
           {/* Greeting */}
-          <div className="bg-[#fef08a] border-2 border-black px-3 py-1 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-xs sm:text-sm font-black text-black flex items-center gap-1.5">
+          <div className="bg-[#E8EFE4] border border-[#DFE5DA] rounded-xl px-3 py-1.5 text-xs sm:text-sm font-medium text-[#26352B] flex items-center gap-1.5">
             <span>🙏</span>
             <span>Namaste, Ramesh!</span>
           </div>
 
           {/* Location Badge */}
-          <div className="bg-[#bbf7d0] border-2 border-black px-2.5 py-1 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-xs sm:text-sm font-black text-black flex items-center gap-1">
+          <div className="bg-[#E8CFA3]/50 border border-[#DFE5DA] rounded-xl px-3 py-1.5 text-xs sm:text-sm font-medium text-[#26352B] flex items-center gap-1.5">
             <svg
-              className="w-3.5 h-3.5 fill-current"
+              className="w-3.5 h-3.5 fill-[#246B45]"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -55,7 +77,7 @@ export default function Navbar() {
           </div>
 
           {/* Language Selection Buttons */}
-          <div className="flex items-center gap-1 bg-white border-2 border-black p-0.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+          <div className="flex items-center gap-1 bg-[#F7F8F2] border border-[#DFE5DA] p-1 rounded-xl">
             {languages.map((lang) => {
               const isActive = activeLang === lang.code;
               return (
@@ -64,11 +86,11 @@ export default function Navbar() {
                   type="button"
                   onClick={() => setActiveLang(lang.code)}
                   title={lang.fullName}
-                  className={`px-2.5 py-0.5 text-xs font-black transition-all ${
+                  className={`px-2 py-0.5 text-xs font-semibold rounded-lg transition-all ${
                     isActive
-                      ? 'bg-black text-[#fef08a]'
-                      : 'bg-[#f4f0ea] text-black hover:bg-[#fef08a]'
-                  } border border-black active:translate-x-0.5 active:translate-y-0.5`}
+                      ? 'bg-[#246B45] text-white shadow-sm'
+                      : 'text-[#26352B] hover:bg-[#E8EFE4]'
+                  }`}
                 >
                   [{lang.label}]
                 </button>
@@ -80,4 +102,3 @@ export default function Navbar() {
     </header>
   );
 }
-
