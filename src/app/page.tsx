@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -6,10 +8,12 @@ import {
   Landmark,
   Leaf,
 } from 'lucide-react';
+import { isLanguageCode, languages, useLanguage } from '@/lib/i18n';
 
 const features = [
   {
     title: 'Real Net Profit Calculator',
+    translationKey: 'profitCalc',
     description:
       'See how diesel, freight, and spoilage are deducted so you know your true take-home earnings before leaving your farm.',
     href: '/calculator',
@@ -19,6 +23,7 @@ const features = [
   },
   {
     title: 'Live Produce Auctions',
+    translationKey: undefined,
     description:
       'Let verified buyers bid on your harvest from anywhere. No need to dump produce at low prices.',
     href: '/marketplace',
@@ -28,6 +33,7 @@ const features = [
   },
   {
     title: 'AI Crop Doctor',
+    translationKey: 'cropDoctor',
     description:
       'Get photo-based guidance for leaf blight, curl, and pests with actionable treatment suggestions.',
     href: '/crop-doctor',
@@ -37,6 +43,7 @@ const features = [
   },
   {
     title: 'Government Schemes',
+    translationKey: 'govtSchemes',
     description:
       'Find simple access to PM-Kisan, KCC loan subsidies, and MahaDBT farm equipment grants.',
     href: '/schemes',
@@ -44,9 +51,11 @@ const features = [
     label: 'Find support for your farm',
     tone: 'bg-[#E8CFA3]/50 text-[#26352B]',
   },
-];
+] as const;
 
 export default function HomePage() {
+  const { language, setLanguage, t } = useLanguage();
+
   return (
     <main className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
       <header className="border-b border-[#DFE5DA] bg-white">
@@ -59,9 +68,7 @@ export default function HomePage() {
               <span className="font-serif text-2xl font-bold leading-tight tracking-tight group-hover:text-[#246B45]">
                 MandiLog
               </span>
-              <span className="text-xs text-[#26352B]/70">
-                Sell Smarter. Farm Better.
-              </span>
+              <span className="text-xs text-[#26352B]/70">{t('brandTagline')}</span>
             </span>
           </Link>
 
@@ -69,37 +76,30 @@ export default function HomePage() {
             aria-label="Main navigation"
             className="flex flex-wrap items-center gap-3"
           >
-            <div
-              aria-label="Language selection"
-              className="flex items-center gap-0.5 rounded-xl border border-[#DFE5DA] bg-[#F7F8F2] p-1"
+            <label className="sr-only" htmlFor="landing-language">
+              Select language
+            </label>
+            <select
+              id="landing-language"
+              value={language}
+              onChange={(event) => {
+                if (isLanguageCode(event.target.value)) {
+                  setLanguage(event.target.value);
+                }
+              }}
+              className="max-w-[150px] rounded-xl border border-[#DFE5DA] bg-[#E8EFE4] px-3 py-2 text-sm font-medium outline-none focus:border-[#246B45]"
             >
-              <button
-                type="button"
-                aria-pressed="true"
-                className="rounded-lg bg-[#246B45] px-2.5 py-1.5 text-xs font-semibold text-white"
-              >
-                [MR]
-              </button>
-              <button
-                type="button"
-                aria-pressed="false"
-                className="rounded-lg px-2.5 py-1.5 text-xs font-semibold hover:bg-[#E8EFE4]"
-              >
-                [HI]
-              </button>
-              <button
-                type="button"
-                aria-pressed="false"
-                className="rounded-lg px-2.5 py-1.5 text-xs font-semibold hover:bg-[#E8EFE4]"
-              >
-                [EN]
-              </button>
-            </div>
+              {languages.map((item) => (
+                <option key={item.code} value={item.code}>
+                  {item.nativeName}
+                </option>
+              ))}
+            </select>
             <Link
-              href="/dashboard"
+              href="/login"
               className="inline-flex items-center gap-2 rounded-xl bg-[#246B45] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1d5738]"
             >
-              Enter Dashboard
+              Login
               <ArrowRight className="h-4 w-4" />
             </Link>
           </nav>
@@ -114,8 +114,7 @@ export default function HomePage() {
               Built for farmers across Maharashtra
             </span>
             <h1 className="mt-5 font-serif text-4xl leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">
-              Sell Smarter. Farm Better.{' '}
-              <span className="text-[#246B45]">Grow Together.</span>
+              {t('brandTagline')}
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-[#26352B]/80 sm:text-lg sm:leading-8">
               AI-powered agricultural platform for Indian farmers with market
@@ -124,10 +123,10 @@ export default function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/dashboard"
+                href="/login"
                 className="inline-flex items-center gap-2 rounded-xl bg-[#246B45] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#1d5738]"
               >
-                Get Started <span aria-hidden="true">-&gt;</span>
+                {t('getStarted')} <span aria-hidden="true">-&gt;</span>
               </Link>
               <Link
                 href="/prices"
@@ -228,7 +227,9 @@ export default function HomePage() {
                     {feature.label}
                   </p>
                   <h3 className="mt-1 font-serif text-2xl tracking-tight">
-                    {feature.title}
+                    {feature.translationKey
+                      ? t(feature.translationKey)
+                      : feature.title}
                   </h3>
                   <p className="mt-2 leading-7 text-[#26352B]/75">
                     {feature.description}
@@ -251,7 +252,7 @@ export default function HomePage() {
             practical tools by your side.
           </p>
           <Link
-            href="/dashboard"
+            href="/login"
             className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 font-semibold text-[#246B45] transition-colors hover:bg-[#F7F8F2]"
           >
             Open Farmer Dashboard

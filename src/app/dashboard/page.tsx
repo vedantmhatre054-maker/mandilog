@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowRight,
@@ -10,37 +13,38 @@ import {
   TrendingUp,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import { languages, useLanguage } from '@/lib/i18n';
 
 const primaryFeatures = [
   {
-    title: 'Sell My Crop',
+    titleKey: 'sellCrop',
     subtitle: 'Find buyers and bids',
     href: '/marketplace',
     icon: ShoppingBag,
     style: 'bg-[#246B45] text-white',
   },
   {
-    title: 'Market Prices',
+    titleKey: 'marketPrices',
     subtitle: 'Compare nearby markets',
     href: '/prices',
     icon: TrendingUp,
     style: 'bg-[#E8EFE4] text-[#26352B]',
   },
   {
-    title: 'Crop Doctor',
+    titleKey: 'cropDoctor',
     subtitle: 'Check crop problems',
     href: '/crop-doctor',
     icon: Stethoscope,
     style: 'bg-[#E8EFE4] text-[#26352B]',
   },
   {
-    title: 'Govt. Schemes',
+    titleKey: 'govtSchemes',
     subtitle: 'Explore farmer benefits',
     href: '/schemes',
     icon: Landmark,
     style: 'bg-[#E8CFA3] text-[#26352B]',
   },
-];
+] as const;
 
 const quickLinks = [
   { title: 'My Farms', href: '/farms', icon: Sprout },
@@ -49,6 +53,39 @@ const quickLinks = [
 ];
 
 export default function DashboardPage() {
+  const { language, t } = useLanguage();
+  const [profileName, setProfileName] = useState('Farmer');
+  const activeLanguage = languages.find((item) => item.code === language);
+
+  useEffect(() => {
+    const storedProfile = window.localStorage.getItem('mandilog-profile');
+    if (storedProfile) {
+      try {
+        const profile: unknown = JSON.parse(storedProfile);
+        if (
+          typeof profile === 'object' &&
+          profile !== null &&
+          'name' in profile &&
+          typeof profile.name === 'string' &&
+          profile.name.trim()
+        ) {
+          setProfileName(profile.name.trim());
+          return;
+        }
+      } catch (error) {
+        console.error('Could not read the saved MandiLog profile.', error);
+      }
+    }
+
+    const legacyName = window.localStorage.getItem('mandilog-user');
+    if (legacyName?.trim()) setProfileName(legacyName.trim());
+  }, []);
+
+  const greeting =
+    profileName === 'Farmer'
+      ? t('greeting')
+      : t('greeting').replace(/,[^,]*!$/u, `, ${profileName}!`);
+
   return (
     <div className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
       <Navbar />
@@ -56,10 +93,15 @@ export default function DashboardPage() {
       <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         <header>
           <h1 className="font-serif text-2xl font-bold tracking-tight">
-            Namaste, Farmer!
+            {greeting}
           </h1>
           <p className="mt-1 text-sm text-[#26352B]/70">
             What would you like to do today?
+            {activeLanguage && (
+              <span className="ml-2 inline-flex rounded-full bg-[#E8EFE4] px-2.5 py-0.5 text-xs font-semibold text-[#246B45]">
+                {activeLanguage.nativeName}
+              </span>
+            )}
           </p>
         </header>
 
@@ -71,13 +113,13 @@ export default function DashboardPage() {
             const Icon = feature.icon;
             return (
               <Link
-                key={feature.title}
+                key={feature.titleKey}
                 href={feature.href}
                 className={`group flex min-h-40 items-center justify-between rounded-2xl p-6 shadow-sm transition-all hover:shadow-md ${feature.style}`}
               >
                 <div>
                   <h2 className="font-serif text-2xl font-semibold">
-                    {feature.title}
+                    {t(feature.titleKey)}
                   </h2>
                   <p className="mt-1 text-sm opacity-80">{feature.subtitle}</p>
                 </div>
