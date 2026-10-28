@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 import { calculateNetReturns } from '@/lib/calculator';
 import { MarketOption } from '@/types/mandilog';
 
@@ -112,9 +112,7 @@ export default function CalculatorPage() {
   const recommended = calculationResults.find((r) => r.isRecommended);
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] text-[#26352B] flex flex-col font-sans">
-      <Navbar />
-
+    <AppShell>
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Header */}
         <div className="pb-4 border-b border-[#DFE5DA]">
@@ -444,7 +442,6 @@ export default function CalculatorPage() {
           </section>
         </div>
       </main>
-    </div>
+    </AppShell>
   );
 }
-

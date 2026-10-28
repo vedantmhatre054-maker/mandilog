@@ -1,7 +1,7 @@
 'use client';
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
-import { Bot, Mic, MicOff, Send, Sprout, Volume2, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Bot, Mic, MicOff, Sprout, Volume2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/lib/i18n';
 
@@ -34,11 +34,7 @@ interface SpeechWindow extends Window {
   webkitSpeechRecognition?: RecognitionConstructor;
 }
 
-const quickQueries = [
-  'How to protect tomatoes from early blight?',
-  "Today's APMC mandi rate in Junnar?",
-  'Suggest best crop for black soil in rabi season',
-];
+const quickQueries = ['Tomato Blight', 'Junnar Mandi Rate', 'Drip Subsidy'];
 
 const speechLanguage: Record<string, string> = {
   en: 'en-IN',
@@ -46,7 +42,12 @@ const speechLanguage: Record<string, string> = {
   mr: 'mr-IN',
 };
 
-function answerQuestion(question: string, acres: number | null, language: string) {
+function answerQuestion(
+  question: string,
+  acres: number | null,
+  category: string,
+  language: string,
+) {
   const query = question.toLowerCase();
   const isHindi = language === 'hi';
   const isMarathi = language === 'mr';
@@ -69,6 +70,20 @@ function answerQuestion(question: string, acres: number | null, language: string
       return 'माझ्याकडे सध्या पडताळलेले थेट बाजारभाव उपलब्ध नाहीत. किंमत आणि तारीख तपासण्यासाठी बाजारभाव पेज पाहा; उदाहरण डेटा आजचा भाव समजू नका.';
     }
     return 'I cannot verify a live mandi quote right now. Check the market prices page and verify its source and reporting date; do not treat demonstration figures as today’s price.';
+  }
+
+  if (/scheme|subsidy|drip|pm.?kisan|महाडीबीटी|योजना|अनुदान/i.test(query)) {
+    const landContext =
+      acres && acres > 0
+        ? ` Your saved profile shows ${acres} acres and category ${category}.`
+        : '';
+    if (isHindi) {
+      return `आप PM-Kisan के ₹6,000 वार्षिक लाभ और MahaDBT सूक्ष्म सिंचाई सहायता के लिए आवेदन की जाँच कर सकते हैं। यह पक्की पात्रता नहीं है; भूमि रिकॉर्ड, श्रेणी और वर्तमान नियम आधिकारिक पोर्टल पर जाँचें: mahadbt.maharashtra.gov.in.${landContext}`;
+    }
+    if (isMarathi) {
+      return `PM-Kisan च्या ₹6,000 वार्षिक लाभासाठी आणि MahaDBT सूक्ष्म-सिंचन अनुदानासाठी पात्रता तपासू शकता. ही पात्रतेची हमी नाही; जमीन नोंदी, प्रवर्ग आणि सध्याचे नियम अधिकृत पोर्टलवर तपासा: mahadbt.maharashtra.gov.in.${landContext}`;
+    }
+    return `You can check possible eligibility for PM-Kisan (₹6,000/year for eligible families) and MahaDBT micro-irrigation support. This is not an eligibility decision; land records, category and current rules must be verified on the official portal: mahadbt.maharashtra.gov.in.${landContext}`;
   }
 
   if (/black soil|rabi|काली मिट्टी|रबी|काळी माती/i.test(query)) {
@@ -94,32 +109,44 @@ export default function AIAssistantModal() {
   const router = useRouter();
   const { language } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [voiceMessage, setVoiceMessage] = useState('');
   const [listening, setListening] = useState(false);
   const [landAcres, setLandAcres] = useState<number | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [farmerCategory, setFarmerCategory] = useState('General');
   const recognitionRef = useRef<Recognition | null>(null);
+  const startVoiceRef = useRef<() => void>(() => undefined);
 
   useEffect(() => {
-    try {
-      const rawProfile = window.localStorage.getItem('mandilog-farm-profile');
-      if (!rawProfile) return;
-      const profile: unknown = JSON.parse(rawProfile);
-      if (
-        typeof profile === 'object' &&
-        profile !== null &&
-        'landAcres' in profile &&
-        typeof profile.landAcres === 'number' &&
-        Number.isFinite(profile.landAcres)
-      ) {
-        setLandAcres(profile.landAcres);
+    const refreshProfile = () => {
+      try {
+        const rawProfile = window.localStorage.getItem('mandilog_user_profile');
+        if (!rawProfile) {
+          setLandAcres(null);
+          setFarmerCategory('General');
+          return;
+        }
+        const profile: unknown = JSON.parse(rawProfile);
+        if (typeof profile !== 'object' || profile === null) return;
+        if (
+          'landAcres' in profile &&
+          typeof profile.landAcres === 'number' &&
+          Number.isFinite(profile.landAcres)
+        ) {
+          setLandAcres(profile.landAcres);
+        }
+        if ('category' in profile && typeof profile.category === 'string') {
+          setFarmerCategory(profile.category);
+        }
+      } catch (error) {
+        console.error('Could not read the farm profile for Sahayak AI.', error);
       }
-    } catch (error) {
-      console.error('Could not read the farm profile for Sahayak AI.', error);
-    }
+    };
+    refreshProfile();
+    window.addEventListener('mandilog:profile-updated', refreshProfile);
+    return () =>
+      window.removeEventListener('mandilog:profile-updated', refreshProfile);
   }, []);
 
   const speakText = (text: string) => {
@@ -139,17 +166,13 @@ export default function AIAssistantModal() {
         (event as CustomEvent<{ startVoice?: boolean }>).detail?.startVoice;
       setOpen(true);
       if (startVoice) {
-        window.setTimeout(() => startSpeechInput(), 100);
+        window.setTimeout(() => startVoiceRef.current(), 100);
       }
     };
     window.addEventListener('mandilog:open-assistant', openAssistant);
     return () =>
       window.removeEventListener('mandilog:open-assistant', openAssistant);
   }, []);
-
-  useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
 
   const sendMessage = (question: string) => {
     const trimmed = question.trim();
@@ -159,10 +182,13 @@ export default function AIAssistantModal() {
       ...current,
       { id: `${Date.now()}-user`, role: 'farmer', text: trimmed },
     ]);
-    setInput('');
-
     window.setTimeout(() => {
-      const answer = answerQuestion(trimmed, landAcres, language);
+      const answer = answerQuestion(
+        trimmed,
+        landAcres,
+        farmerCategory,
+        language,
+      );
       setMessages((current) => [
         ...current,
         { id: `${Date.now()}-assistant`, role: 'assistant', text: answer },
@@ -172,17 +198,12 @@ export default function AIAssistantModal() {
     }, 180);
   };
 
-  const submitMessage = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    sendMessage(input);
-  };
-
   const startSpeechInput = () => {
     const speechWindow = window as SpeechWindow;
     const Recognition =
       speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
     if (!Recognition) {
-      setVoiceMessage('Voice input is not supported in this browser. Type your question instead.');
+      setVoiceMessage('Voice input is not supported in this browser.');
       return;
     }
     const recognition = new Recognition();
@@ -245,7 +266,6 @@ export default function AIAssistantModal() {
         return;
       }
 
-      setInput(transcript);
       setVoiceMessage('I heard you. Preparing spoken guidance…');
       sendMessage(transcript);
     };
@@ -253,8 +273,8 @@ export default function AIAssistantModal() {
       setListening(false);
       setVoiceMessage(
         event.error === 'not-allowed'
-          ? 'Microphone permission was denied. Type your question instead.'
-          : `Voice input unavailable (${event.error}). Type your question instead.`,
+        ? 'Microphone permission was denied. Allow microphone access and try again.'
+        : `Voice input unavailable (${event.error}). Please try again.`,
       );
     };
     recognition.onend = () => {
@@ -266,9 +286,10 @@ export default function AIAssistantModal() {
       setVoiceMessage('Listening…');
     } catch (error) {
       console.error('Could not start Sahayak voice input.', error);
-      setVoiceMessage('Could not start voice input. Please type your question.');
+      setVoiceMessage('Could not start voice input. Please try again.');
     }
   };
+  startVoiceRef.current = startSpeechInput;
 
   return (
     <>
@@ -293,9 +314,9 @@ export default function AIAssistantModal() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="sahayak-title"
-            className="flex h-[min(620px,calc(100dvh-24px))] w-full max-w-2xl flex-col justify-between overflow-hidden rounded-3xl border border-[#DFE5DA] bg-white p-4 shadow-2xl sm:h-[620px] sm:p-6"
+            className="flex h-[min(580px,calc(100dvh-24px))] w-full max-w-xl flex-col justify-between overflow-hidden rounded-3xl border border-[#DFE5DA] bg-white p-6 shadow-2xl dark:bg-[#1A281F]"
           >
-            <header className="flex items-center justify-between border-b border-[#DFE5DA] p-4">
+            <header className="flex shrink-0 items-center justify-between border-b border-[#DFE5DA] pb-4">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E8EFE4] text-[#246B45]">
                   <Bot className="h-5 w-5" />
@@ -319,15 +340,14 @@ export default function AIAssistantModal() {
               </button>
             </header>
 
-            <div className="flex-1 space-y-3 overflow-y-auto py-4">
+            <div className="min-h-0 flex-1 space-y-3 overflow-y-auto py-4">
               {messages.length === 0 && (
-                <p className="rounded-xl bg-[#E8EFE4] p-3 text-sm leading-6">
-                  Ask a farming question in English, Hindi, or Marathi. Answers
-                  are general guidance and do not use live market or disease
-                  diagnosis services.
+                <p className="rounded-2xl bg-[#F0F4EC] p-4 text-sm leading-6 text-[#26352B] dark:bg-[#233529] dark:text-[#E8EFE4]">
+                  Ask about crop care, mandi references, or farmer schemes.
+                  Speak in English, Hindi, or Marathi, or choose a quick topic.
                   {landAcres !== null && (
                     <span className="mt-1 block text-xs text-[#26352B]/70">
-                      Farm profile context: {landAcres} acres.
+                      Profile context: {landAcres} acres · {farmerCategory}.
                     </span>
                   )}
                 </p>
@@ -338,7 +358,7 @@ export default function AIAssistantModal() {
                   className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-6 ${
                     message.role === 'farmer'
                       ? 'ml-auto bg-[#246B45] text-white'
-                      : 'bg-[#F7F8F2] text-[#26352B]'
+                      : 'bg-[#F0F4EC] text-[#26352B] dark:bg-[#233529] dark:text-[#E8EFE4]'
                   }`}
                 >
                   {message.text}
@@ -361,18 +381,19 @@ export default function AIAssistantModal() {
               )}
             </div>
 
-            <div className="space-y-3 border-t border-[#DFE5DA] pt-4">
+            <div className="shrink-0 space-y-4 border-t border-[#DFE5DA] pt-4">
               <div className="flex flex-col items-center gap-2">
                 <button
                   type="button"
                   onClick={listening ? () => recognitionRef.current?.stop() : startSpeechInput}
                   aria-label={listening ? 'Stop listening' : 'Start voice conversation'}
-                  className={`flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-all active:scale-95 ${
-                    listening
-                      ? 'animate-pulse bg-red-600'
-                      : 'bg-[#246B45] hover:bg-[#1e5838]'
+                  className={`relative mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#246B45] text-white shadow-lg transition-all active:scale-95 ${
+                    listening ? 'bg-red-600' : 'hover:bg-[#1e5838]'
                   }`}
                 >
+                  {listening && (
+                    <span className="absolute inset-0 animate-ping rounded-full border-2 border-red-500" />
+                  )}
                   {listening ? (
                     <MicOff className="h-7 w-7" />
                   ) : (
@@ -385,14 +406,14 @@ export default function AIAssistantModal() {
                     : `Tap to speak · ${speechLanguage[language] ?? 'en-IN'}`}
                 </span>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-1">
+              <div className="flex flex-wrap justify-center gap-2">
                 {quickQueries.map((query) => (
                   <button
                     key={query}
                     type="button"
                     onClick={() => sendMessage(query)}
                     disabled={busy}
-                    className="shrink-0 rounded-full border border-[#DFE5DA] bg-[#F7F8F2] px-3 py-2 text-xs font-medium hover:bg-[#E8EFE4] disabled:opacity-50"
+                    className="rounded-full border border-[#DFE5DA] bg-[#F7F8F2] px-3 py-2 text-xs font-medium hover:bg-[#E8EFE4] disabled:opacity-50 dark:border-[#2B3E31] dark:bg-[#233529] dark:text-[#E8EFE4]"
                   >
                     {query}
                   </button>
@@ -403,32 +424,6 @@ export default function AIAssistantModal() {
                   {voiceMessage}
                 </p>
               )}
-              <form onSubmit={submitMessage} className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={startSpeechInput}
-                  aria-label="Ask by voice"
-                  className="rounded-xl border border-[#DFE5DA] bg-white p-3 text-[#246B45] hover:bg-[#E8EFE4]"
-                >
-                  <Mic className="h-5 w-5" />
-                </button>
-                <input
-                  ref={inputRef}
-                  value={input}
-                  onChange={(event) => setInput(event.target.value)}
-                  placeholder="Ask a farming question..."
-                  className="min-w-0 flex-1 rounded-xl border border-[#DFE5DA] px-3 py-3 text-sm outline-none focus:border-[#246B45]"
-                  aria-label="Your farming question"
-                />
-                <button
-                  type="submit"
-                  disabled={!input.trim() || busy}
-                  aria-label="Send question"
-                  className="rounded-xl bg-[#246B45] p-3 text-white hover:bg-[#1e5838] disabled:opacity-50"
-                >
-                  <Send className="h-5 w-5" />
-                </button>
-              </form>
             </div>
           </section>
         </div>

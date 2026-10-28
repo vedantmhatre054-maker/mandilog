@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 import {
   getLocalAuctionOffers,
   getLocalMarketplaceListings,
@@ -199,9 +199,7 @@ export default function LiveAuctionRoomPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] text-[#26352B] flex flex-col font-sans">
-      <Navbar />
-
+    <AppShell>
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {storageNotice && (
           <p role="status" className="rounded-xl bg-[#E8EFE4] p-3 text-sm text-[#246B45]">
@@ -477,6 +475,6 @@ export default function LiveAuctionRoomPage() {
           </div>
         </div>
       </main>
-    </div>
+    </AppShell>
   );
 }

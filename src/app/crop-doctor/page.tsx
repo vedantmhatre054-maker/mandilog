@@ -10,7 +10,7 @@ import {
   Upload,
   Volume2,
 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 import { useLanguage } from '@/lib/i18n';
 
 interface PixelSummary {
@@ -215,8 +215,7 @@ export default function CropDoctorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] text-[#26352B] font-sans">
-      <Navbar />
+    <AppShell>
       <main className="mx-auto w-full max-w-7xl space-y-10 px-4 py-10 sm:px-6 lg:px-8">
         <header className="text-center">
           <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">
@@ -434,6 +433,6 @@ export default function CropDoctorPage() {
           </div>
         </section>
       </main>
-    </div>
+    </AppShell>
   );
 }

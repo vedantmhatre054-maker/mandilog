@@ -2,7 +2,7 @@
 
 import { FormEvent, useMemo, useState } from 'react';
 import { BadgeInfo, CalendarClock, Truck } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 
 const vehicles = [
   {
@@ -80,8 +80,7 @@ export default function TransportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
-      <Navbar />
+    <AppShell>
       <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         <header>
           <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">
@@ -221,6 +220,6 @@ export default function TransportPage() {
           </section>
         </div>
       </main>
-    </div>
+    </AppShell>
   );
 }

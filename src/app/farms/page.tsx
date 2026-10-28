@@ -6,7 +6,7 @@ import {
   Plus,
   Sprout,
 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 
 const farms = [
   {
@@ -34,9 +34,7 @@ const farms = [
 
 export default function FarmsPage() {
   return (
-    <div className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
-      <Navbar />
-
+    <AppShell>
       <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -154,6 +152,6 @@ export default function FarmsPage() {
           </Link>
         </div>
       </main>
-    </div>
+    </AppShell>
   );
 }

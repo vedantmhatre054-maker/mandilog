@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, CloudSun, Save } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 import { getWeatherForecast } from '@/lib/weather';
 
 const cropCycles: Record<string, number> = {
@@ -140,8 +140,7 @@ export default function FarmSetupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
-      <Navbar />
+    <AppShell>
       <main className="mx-auto w-full max-w-4xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         <header>
           <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">
@@ -310,6 +309,6 @@ export default function FarmSetupPage() {
           </button>
         </section>
       </main>
-    </div>
+    </AppShell>
   );
 }

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bookmark, Check, ChevronDown, Landmark, Wallet } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 import { matchSchemes, SchemeFilter } from '@/lib/schemes';
+import { readFarmerProfile } from '@/lib/farmerProfile';
 
 const categories = [
   'All',
@@ -51,6 +52,25 @@ export default function SchemesPage() {
   const [expandedSchemes, setExpandedSchemes] = useState<string[]>([]);
   const [landAcres, setLandAcres] = useState(3.5);
   const [crop, setCrop] = useState('Tomato');
+  const [categoryProfile, setCategoryProfile] = useState('General');
+
+  useEffect(() => {
+    const refreshProfile = () => {
+    try {
+      const profile = readFarmerProfile();
+      if (!profile) return;
+      setLandAcres(profile.landAcres || 3.5);
+      setCrop(profile.crop || 'Tomato');
+      setCategoryProfile(profile.category);
+    } catch (error) {
+      console.error('Could not load profile for scheme matching.', error);
+    }
+    };
+    refreshProfile();
+    window.addEventListener('mandilog:profile-updated', refreshProfile);
+    return () =>
+      window.removeEventListener('mandilog:profile-updated', refreshProfile);
+  }, []);
 
   const visibleSchemes =
     activeCategory === 'All'
@@ -79,8 +99,7 @@ export default function SchemesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] text-[#26352B] font-sans">
-      <Navbar />
+    <AppShell>
       <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
         <header>
           <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">
@@ -143,6 +162,10 @@ export default function SchemesPage() {
               </select>
             </label>
           </div>
+          <p className="mt-4 text-xs text-[#26352B]/65">
+            Profile category: {categoryProfile}. Matches are preliminary only;
+            check the official scheme rules before applying.
+          </p>
           <label className="mt-5 block max-w-xl space-y-2 text-sm font-medium">
             <span className="flex items-center justify-between">
               <span>Land size</span>
@@ -261,6 +284,6 @@ export default function SchemesPage() {
           })}
         </section>
       </main>
-    </div>
+    </AppShell>
   );
 }

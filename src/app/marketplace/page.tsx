@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 import {
   getLocalMarketplaceListings,
   saveLocalMarketplaceListing,
@@ -160,9 +160,7 @@ export default function MarketplacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] text-[#26352B] flex flex-col font-sans">
-      <Navbar />
-
+    <AppShell>
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-[#DFE5DA]">
@@ -423,6 +421,6 @@ export default function MarketplacePage() {
           </div>
         )}
       </main>
-    </div>
+    </AppShell>
   );
 }

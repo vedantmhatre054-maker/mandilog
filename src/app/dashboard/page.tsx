@@ -14,9 +14,10 @@ import {
   TrendingUp,
   Truck,
 } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 import { languages, useLanguage } from '@/lib/i18n';
 import WeatherCard from '@/components/WeatherCard';
+import { readFarmerProfile } from '@/lib/farmerProfile';
 
 const primaryFeatures = [
   {
@@ -98,32 +99,24 @@ export default function DashboardPage() {
   const activeLanguage = languages.find((item) => item.code === language);
 
   useEffect(() => {
+    const refreshProfile = () => {
     try {
-      const storedProfile = window.localStorage.getItem('mandilog-profile');
-      if (storedProfile) {
-        const profile: unknown = JSON.parse(storedProfile);
-        if (
-          typeof profile === 'object' &&
-          profile !== null &&
-          'name' in profile &&
-          typeof profile.name === 'string' &&
-          profile.name.trim()
-        ) {
-          setProfileName(profile.name.trim());
-        }
-        if (
-          typeof profile === 'object' &&
-          profile !== null &&
-          'village' in profile &&
-          typeof profile.village === 'string' &&
-          profile.village.trim()
-        ) {
-          setProfileLocation(profile.village.trim());
-        }
+      const profile = readFarmerProfile();
+      if (profile) {
+        setProfileName(profile.name);
+        setProfileLocation(profile.village);
+        setFarmProfile({
+          landAcres: profile.landAcres,
+          soilType: profile.soilType,
+          crop: profile.crop,
+          sowingDate: '',
+        });
       }
 
-      const legacyName = window.localStorage.getItem('mandilog-user');
-      if (legacyName?.trim()) setProfileName(legacyName.trim());
+      if (!profile) {
+        const legacyName = window.localStorage.getItem('mandilog-user');
+        if (legacyName?.trim()) setProfileName(legacyName.trim());
+      }
 
       const rawFarmProfile = window.localStorage.getItem(
         'mandilog-farm-profile',
@@ -153,6 +146,11 @@ export default function DashboardPage() {
     } catch (error) {
       console.error('Could not read saved MandiLog profile data.', error);
     }
+    };
+    refreshProfile();
+    window.addEventListener('mandilog:profile-updated', refreshProfile);
+    return () =>
+      window.removeEventListener('mandilog:profile-updated', refreshProfile);
   }, []);
 
   const farmCycleDays = farmProfile
@@ -183,9 +181,7 @@ export default function DashboardPage() {
       : `${greetingPrefix}, ${profileName}!`;
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
-      <Navbar />
-
+    <AppShell>
       <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         <header>
           <h1 className="font-serif text-2xl font-bold tracking-tight">
@@ -353,6 +349,6 @@ export default function DashboardPage() {
           </button>
         </section>
       </main>
-    </div>
+    </AppShell>
   );
 }

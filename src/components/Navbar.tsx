@@ -10,16 +10,19 @@ export default function Navbar() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
+    const applyTheme = (nextTheme: 'light' | 'dark') => {
+      document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+      document.body.classList.toggle('dark', nextTheme === 'dark');
+    };
     try {
       const savedTheme = window.localStorage.getItem('mandilog-theme');
       const initialTheme = savedTheme === 'dark' ? 'dark' : 'light';
       setTheme(initialTheme);
-      document.documentElement.classList.toggle(
-        'dark',
-        initialTheme === 'dark',
-      );
+      applyTheme(initialTheme);
     } catch (error) {
       console.error('Could not load the saved theme preference.', error);
+      setTheme('light');
+      applyTheme('light');
     }
   }, []);
 
@@ -27,6 +30,7 @@ export default function Navbar() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+    document.body.classList.toggle('dark', nextTheme === 'dark');
     try {
       window.localStorage.setItem('mandilog-theme', nextTheme);
     } catch (error) {

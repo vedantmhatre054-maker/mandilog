@@ -66,6 +66,7 @@ export default function HomePage() {
       const nextTheme = savedTheme === 'dark' ? 'dark' : 'light';
       setTheme(nextTheme);
       document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+      document.body.classList.toggle('dark', nextTheme === 'dark');
     } catch (error) {
       console.error('Could not load the saved theme preference.', error);
     }
@@ -75,6 +76,7 @@ export default function HomePage() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+    document.body.classList.toggle('dark', nextTheme === 'dark');
     try {
       window.localStorage.setItem('mandilog-theme', nextTheme);
     } catch (error) {

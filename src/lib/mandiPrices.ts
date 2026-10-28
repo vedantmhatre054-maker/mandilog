@@ -9,6 +9,7 @@ export interface MandiPriceRecord {
 }
 
 const CACHE_KEY = 'mandilog-official-mandi-prices-v1';
+let memoryCache: MandiPriceRecord[] | null = null;
 
 function isMandiPriceRecord(value: unknown): value is MandiPriceRecord {
   if (typeof value !== 'object' || value === null) return false;
@@ -26,12 +27,14 @@ function isMandiPriceRecord(value: unknown): value is MandiPriceRecord {
 }
 
 export function getCachedMandiPrices(): MandiPriceRecord[] {
+  if (memoryCache) return memoryCache.slice();
   try {
     const raw = window.localStorage.getItem(CACHE_KEY);
     if (!raw) return [];
     const cached: unknown = JSON.parse(raw);
     if (!Array.isArray(cached) || !cached.every(isMandiPriceRecord)) return [];
-    return cached;
+    memoryCache = cached;
+    return cached.slice();
   } catch (error) {
     console.error('Could not read the cached mandi price feed.', error);
     return [];
@@ -44,6 +47,7 @@ export function cacheMandiPrices(records: MandiPriceRecord[]): void {
   }
   try {
     window.localStorage.setItem(CACHE_KEY, JSON.stringify(records));
+    memoryCache = records.slice();
   } catch (error) {
     console.error('Could not cache official mandi prices.', error);
   }

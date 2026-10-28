@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { CloudSun, Droplets, Wind } from 'lucide-react';
-import { getWeatherForecast, WeatherForecast } from '@/lib/weather';
+import {
+  getCachedWeatherForecast,
+  getWeatherForecast,
+  WeatherForecast,
+} from '@/lib/weather';
 
 export default function WeatherCard({ location }: { location: string }) {
   const [forecast, setForecast] = useState<WeatherForecast | null>(null);
@@ -11,7 +15,13 @@ export default function WeatherCard({ location }: { location: string }) {
 
   useEffect(() => {
     const controller = new AbortController();
-    setLoading(true);
+    const cachedForecast = getCachedWeatherForecast(location);
+    if (cachedForecast) {
+      setForecast(cachedForecast);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     setError('');
     getWeatherForecast(location, controller.signal)
       .then(setForecast)

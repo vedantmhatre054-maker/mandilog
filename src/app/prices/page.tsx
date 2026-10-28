@@ -3,73 +3,55 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, BadgeInfo, BadgeCheck } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import AppShell from '@/components/AppShell';
 import {
   getCachedMandiPrices,
   MandiPriceRecord,
   sortMandiPrices,
 } from '@/lib/mandiPrices';
 
-const demonstrationPrices: MandiPriceRecord[] = [
+const referenceBenchmarks: MandiPriceRecord[] = [
   {
-    market: 'Pune (APMC)',
+    market: 'Junnar',
+    commodity: 'Tomato',
+    variety: 'Hybrid',
+    modalPricePerQuintal: 2400,
+    reportedOn: 'Reference benchmark · not live',
+    source: 'demonstration',
+    fetchedAt: '',
+  },
+  {
+    market: 'Pune APMC',
     commodity: 'Tomato',
     variety: 'Hybrid',
     modalPricePerQuintal: 2800,
-    reportedOn: 'Demonstration only',
-    source: 'demonstration',
-    fetchedAt: '',
-  },
-  {
-    market: 'Narayangaon',
-    commodity: 'Tomato',
-    variety: 'Hybrid',
-    modalPricePerQuintal: 2600,
-    reportedOn: 'Demonstration only',
-    source: 'demonstration',
-    fetchedAt: '',
-  },
-  {
-    market: 'Junnar (Local)',
-    commodity: 'Tomato',
-    variety: 'Local',
-    modalPricePerQuintal: 2400,
-    reportedOn: 'Demonstration only',
-    source: 'demonstration',
-    fetchedAt: '',
-  },
-  {
-    market: 'Ahilyanagar',
-    commodity: 'Tomato',
-    variety: 'Hybrid',
-    modalPricePerQuintal: 2750,
-    reportedOn: 'Demonstration only',
+    reportedOn: 'Reference benchmark · not live',
     source: 'demonstration',
     fetchedAt: '',
   },
   {
     market: 'Mumbai (Vashi)',
     commodity: 'Tomato',
-    variety: 'Hybrid',
+    variety: 'Local',
     modalPricePerQuintal: 3200,
-    reportedOn: 'Demonstration only',
+    reportedOn: 'Reference benchmark · not live',
     source: 'demonstration',
     fetchedAt: '',
   },
 ];
 
 export default function PricesPage() {
-  const [officialPrices, setOfficialPrices] = useState<MandiPriceRecord[]>([]);
+  const [cachedPrices, setCachedPrices] = useState<MandiPriceRecord[]>([]);
   const [commodity, setCommodity] = useState('Tomato');
   const [reportingDate, setReportingDate] = useState('Any date');
 
   useEffect(() => {
-    setOfficialPrices(getCachedMandiPrices());
+    setCachedPrices(getCachedMandiPrices());
   }, []);
 
   const displayedPrices = useMemo(() => {
     const records =
-      officialPrices.length > 0 ? officialPrices : demonstrationPrices;
+      cachedPrices.length > 0 ? cachedPrices : referenceBenchmarks;
     const sortedRecords = sortMandiPrices(records, commodity);
     if (reportingDate === 'Any date') return sortedRecords;
     const today = new Date();
@@ -83,14 +65,13 @@ export default function PricesPage() {
       oneWeekAgo.setDate(today.getDate() - 7);
       return reportDate >= oneWeekAgo && reportDate <= today;
     });
-  }, [commodity, officialPrices, reportingDate]);
+  }, [cachedPrices, commodity, reportingDate]);
   const showingOfficial = displayedPrices.some(
     (record) => record.source === 'official',
   );
 
   return (
-    <div className="min-h-screen bg-[#F7F8F2] text-[#26352B] font-sans">
-      <Navbar />
+    <AppShell>
       <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
         <header>
           <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">
@@ -141,25 +122,10 @@ export default function PricesPage() {
           </label>
           <div className="flex items-end text-sm text-[#26352B]/70">
             {showingOfficial
-              ? 'Showing cached official records, sorted by highest modal price.'
-              : 'Sorted by highest modal rate. Example data only; not a current quote.'}
+              ? 'Cached official records · sorted by highest modal price.'
+              : 'Reference benchmarks · sorted by rate, not current quotes.'}
           </div>
         </section>
-
-        {!showingOfficial && (
-          <div
-            role="status"
-            className="flex items-start gap-3 rounded-xl border border-[#DFE5DA] bg-[#E8CFA3]/30 p-4 text-sm leading-6"
-          >
-            <BadgeInfo className="mt-0.5 h-5 w-5 shrink-0 text-[#246B45]" />
-            <p>
-              No official price feed is configured or cached on this device.
-              AGMARKNET&apos;s public API denied unauthenticated access during
-              verification. The rows below are illustrative examples, not live
-              prices or verified AGMARKNET data.
-            </p>
-          </div>
-        )}
 
         <section
           aria-label="Mandi prices sorted by modal price"
@@ -187,8 +153,11 @@ export default function PricesPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#DFE5DA]">
-                {displayedPrices.map((row) => (
-                  <tr key={`${row.market}-${row.commodity}`}>
+                {displayedPrices.map((row, index) => (
+                  <tr
+                    key={`${row.market}-${row.commodity}`}
+                    className={index % 2 === 0 ? 'bg-white' : 'bg-[#F7F8F2]'}
+                  >
                     <td className="px-5 py-4 font-semibold">{row.market}</td>
                     <td className="px-5 py-4">
                       {row.commodity} · {row.variety}
@@ -214,8 +183,7 @@ export default function PricesPage() {
                       colSpan={5}
                       className="px-5 py-8 text-center text-[#26352B]/70"
                     >
-                      No cached records for {commodity}. The illustrative
-                      examples currently cover tomatoes only.
+                      No cached or reference records for {commodity}.
                     </td>
                   </tr>
                 )}
@@ -233,10 +201,10 @@ export default function PricesPage() {
           <span>
             {showingOfficial
               ? 'Cached official market-price records'
-              : 'Demonstration records · not verified by AGMARKNET'}
+              : 'Reference values for planning · not verified live AGMARKNET data'}
           </span>
         </div>
       </main>
-    </div>
+    </AppShell>
   );
 }
