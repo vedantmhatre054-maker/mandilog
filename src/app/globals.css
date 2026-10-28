@@ -20,7 +20,7 @@ html {
   background-color: var(--bg-page);
 }
 
-.dark {
+html.dark {
   color-scheme: dark;
   --bg-page: #121B15;
   --text-main: #E8EFE4;
@@ -42,51 +42,51 @@ body {
   font-family: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-.dark [class~="bg-white"]:not([class*="dark:bg-"]),
-.dark [class~="bg-[#FFFFFF]"]:not([class*="dark:bg-"]),
-.dark [class*="bg-white/"]:not([class*="dark:bg-"]) {
+html.dark [class~="bg-white"]:not([class*="dark:bg-"]),
+html.dark [class~="bg-[#FFFFFF]"]:not([class*="dark:bg-"]),
+html.dark [class*="bg-white/"]:not([class*="dark:bg-"]) {
   background-color: var(--surface);
 }
 
-.dark [class*="bg-[#F7F8F2]"]:not([class*="dark:bg-"]) {
+html.dark [class*="bg-[#F7F8F2]"]:not([class*="dark:bg-"]) {
   background-color: var(--background);
 }
 
-.dark [class*="bg-[#E8EFE4]"]:not([class*="dark:bg-"]) {
+html.dark [class*="bg-[#E8EFE4]"]:not([class*="dark:bg-"]) {
   background-color: var(--tint);
 }
 
-.dark [class*="border-[#DFE5DA]"]:not([class*="dark:border-"]) {
+html.dark [class*="border-[#DFE5DA]"]:not([class*="dark:border-"]) {
   border-color: var(--border);
 }
 
-.dark [class~="text-[#26352B]"]:not([class*="dark:text-"]),
-.dark [class*="text-[#26352B]/"]:not([class*="dark:text-"]) {
+html.dark [class~="text-[#26352B]"]:not([class*="dark:text-"]),
+html.dark [class*="text-[#26352B]/"]:not([class*="dark:text-"]) {
   color: var(--foreground);
 }
 
-.dark [class~="bg-[#246B45]"]:not([class*="dark:bg-"]) {
+html.dark [class~="bg-[#246B45]"]:not([class*="dark:bg-"]) {
   background-color: var(--primary);
 }
 
-.dark [class~="bg-[#E8CFA3]"]:not([class*="dark:bg-"]) {
+html.dark [class~="bg-[#E8CFA3]"]:not([class*="dark:bg-"]) {
   background-color: #5b4b2d;
 }
 
-.dark [class~="bg-[#DFE5DA]"]:not([class*="dark:bg-"]) {
+html.dark [class~="bg-[#DFE5DA]"]:not([class*="dark:bg-"]) {
   background-color: var(--border);
 }
 
-.dark input,
-.dark select,
-.dark textarea {
+html.dark input,
+html.dark select,
+html.dark textarea {
   color: var(--foreground);
   background-color: var(--surface);
   border-color: var(--border);
 }
 
-.dark input::placeholder,
-.dark textarea::placeholder {
+html.dark input::placeholder,
+html.dark textarea::placeholder {
   color: #a7b5ab;
 }
 

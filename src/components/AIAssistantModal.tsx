@@ -29,6 +29,8 @@ interface RecognitionConstructor {
   new (): Recognition;
 }
 
+type VoiceStatus = 'idle' | 'preparing' | 'speaking';
+
 interface SpeechWindow extends Window {
   SpeechRecognition?: RecognitionConstructor;
   webkitSpeechRecognition?: RecognitionConstructor;
@@ -49,22 +51,22 @@ function answerQuestion(question: string, language: string) {
 
   if (/scheme|subsidy|yojana|pm.?kisan|drip|योजना|अनुदान|महाडीबीटी/i.test(query)) {
     if (isHindi) {
-      return 'आप PM-Kisan के ₹6,000 वार्षिक लाभ और महाराष्ट्र MahaDBT सिंचाई सहायता के लिए पात्रता जाँच सकते हैं। पात्रता और सब्सिडी की राशि नियमों पर निर्भर करती है। Govt. Schemes टैब में विवरण देखें और आधिकारिक पोर्टल पर पुष्टि करें।';
+      return 'आप PM-Kisan के ₹6,000 वार्षिक लाभ और Maharashtra MahaDBT drip-irrigation सहायता के लिए पात्रता जाँच सकते हैं; कुछ योजनाओं में सहायता 80% तक हो सकती है। पात्रता और राशि वर्तमान नियमों पर निर्भर करती है। Govt. Schemes टैब और आधिकारिक पोर्टल पर पुष्टि करें।';
     }
     if (isMarathi) {
-      return 'PM-Kisan च्या वार्षिक ₹6,000 लाभासाठी आणि महाराष्ट्र MahaDBT सिंचन सहाय्यासाठी पात्रता तपासा. पात्रता आणि अनुदानाची रक्कम नियमांवर अवलंबून असते. Govt. Schemes टॅबमध्ये माहिती पाहा आणि अधिकृत पोर्टलवर खात्री करा.';
+      return 'PM-Kisan च्या वार्षिक ₹6,000 लाभासाठी आणि Maharashtra MahaDBT drip-irrigation सहाय्यासाठी पात्रता तपासा; काही योजनांमध्ये 80% पर्यंत मदत असू शकते. पात्रता आणि रक्कम सध्याच्या नियमांवर अवलंबून असते. Govt. Schemes टॅब आणि अधिकृत पोर्टलवर खात्री करा.';
     }
-    return 'You may qualify for PM-Kisan (₹6,000 yearly for eligible families) and Maharashtra MahaDBT drip-irrigation support. Eligibility and subsidy amounts depend on current rules and your application. Open the Govt. Schemes tab for details and confirm on the official portal.';
+    return 'You may qualify for PM-Kisan (₹6,000 yearly for eligible families) and Maharashtra MahaDBT drip-irrigation support; some schemes provide up to 80% assistance. Eligibility and amounts depend on current rules and your application. Open the Govt. Schemes tab and confirm on the official portal.';
   }
 
   if (/blight|disease|rog|spray|pest|tomato|टमाटर|टोमॅटो|करपा|रोग|फवारणी|कीड/i.test(query)) {
     if (isHindi) {
-      return 'टमाटर में अर्ली ब्लाइट के लक्षण हों तो प्रभावित पत्तियाँ हटाएँ और पौधों को सूखा रखें। Mancozeb 75% WP का उपयोग केवल फसल के लेबल और स्थानीय कृषि सलाह के अनुसार करें; जैविक विकल्प के रूप में Neem तेल पर विचार करें। विस्तृत जाँच के लिए AI Crop Doctor खोलें।';
+      return 'टमाटर में अर्ली ब्लाइट के लक्षण हों तो प्रभावित पत्तियाँ हटाएँ और पौधों को सूखा रखें। Mancozeb 75% WP @ 2 g/L तभी इस्तेमाल करें जब आपके उत्पाद के टमाटर वाले लेबल पर यही मात्रा हो और स्थानीय सलाह इसकी पुष्टि करे; जैविक विकल्प के रूप में Neem तेल पर विचार करें। विस्तृत जाँच के लिए AI Crop Doctor खोलें।';
     }
     if (isMarathi) {
-      return 'टोमॅटोवर अर्ली ब्लाइटची लक्षणे दिसल्यास बाधित पाने काढा आणि झाडे कोरडी ठेवा. Mancozeb 75% WP फक्त पिकाच्या लेबलवरील सूचनांनुसार आणि स्थानिक कृषी सल्ल्याने वापरा; सेंद्रिय पर्याय म्हणून कडुनिंब तेलाचा विचार करा. तपशीलवार तपासणीसाठी AI Crop Doctor उघडा.';
+      return 'टोमॅटोवर अर्ली ब्लाइटची लक्षणे दिसल्यास बाधित पाने काढा आणि झाडे कोरडी ठेवा. Mancozeb 75% WP @ 2 g/L फक्त तुमच्या उत्पादनाच्या टोमॅटो लेबलवर ही मात्रा दिली असल्यास आणि स्थानिक कृषी सल्ल्याने पुष्टी केल्यास वापरा; सेंद्रिय पर्याय म्हणून कडुनिंब तेलाचा विचार करा. तपशीलवार तपासणीसाठी AI Crop Doctor उघडा.';
     }
-    return 'If tomato early blight symptoms are present, remove affected leaves and keep foliage dry. Use Mancozeb 75% WP only as directed on the crop label and with local agricultural guidance; neem oil is an organic option to discuss. Open AI Crop Doctor for a closer symptom check.';
+    return 'If tomato early blight symptoms are present, remove affected leaves and keep foliage dry. Use Mancozeb 75% WP at 2 g/L only if that dose is on your product’s tomato label and confirmed by local agricultural guidance; neem oil is an organic option to discuss. Open AI Crop Doctor for a closer symptom check.';
   }
 
   if (/price|bhav|rate|mandi|junnar|भाव|दर|किंमत|मंडी/i.test(query)) {
@@ -107,6 +109,7 @@ export default function AIAssistantModal() {
   const { language } = useLanguage();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>('idle');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [voiceMessage, setVoiceMessage] = useState('');
   const [listening, setListening] = useState(false);
@@ -114,6 +117,33 @@ export default function AIAssistantModal() {
   const [farmerCategory, setFarmerCategory] = useState('General');
   const recognitionRef = useRef<Recognition | null>(null);
   const startVoiceRef = useRef<() => void>(() => undefined);
+  const availableVoicesRef = useRef<SpeechSynthesisVoice[]>([]);
+  const speechGenerationRef = useRef(0);
+  const speechWatchdogRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!('speechSynthesis' in window)) return;
+
+    const synthesis = window.speechSynthesis;
+    const previousHandler = synthesis.onvoiceschanged;
+    const updateVoices = (event: Event) => {
+      availableVoicesRef.current = synthesis.getVoices();
+      previousHandler?.call(synthesis, event);
+    };
+    availableVoicesRef.current = synthesis.getVoices();
+    synthesis.onvoiceschanged = updateVoices;
+
+    return () => {
+      if (synthesis.onvoiceschanged === updateVoices) {
+        synthesis.onvoiceschanged = previousHandler;
+      }
+      if (speechWatchdogRef.current !== null) {
+        window.clearTimeout(speechWatchdogRef.current);
+      }
+      speechGenerationRef.current += 1;
+      synthesis.cancel();
+    };
+  }, []);
 
   useEffect(() => {
     const refreshProfile = () => {
@@ -148,13 +178,95 @@ export default function AIAssistantModal() {
 
   const speakText = (text: string) => {
     if (!('speechSynthesis' in window)) {
+      setVoiceStatus('idle');
       setVoiceMessage('Voice playback is not supported in this browser.');
       return;
     }
-    window.speechSynthesis.cancel();
+    const synthesis = window.speechSynthesis;
+    const generation = ++speechGenerationRef.current;
+    if (speechWatchdogRef.current !== null) {
+      window.clearTimeout(speechWatchdogRef.current);
+      speechWatchdogRef.current = null;
+    }
+    synthesis.cancel();
+    setVoiceStatus('preparing');
+    const voices = synthesis.getVoices();
+    if (voices.length > 0) availableVoicesRef.current = voices;
+
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = speechLanguage[language] ?? 'en-IN';
-    window.speechSynthesis.speak(utterance);
+    const targetLanguage = speechLanguage[language] ?? 'en-IN';
+    const normalizedTarget = targetLanguage.toLowerCase();
+    const targetPrefix = normalizedTarget.split('-')[0];
+    const voice =
+      availableVoicesRef.current.find(
+        (candidate) => candidate.lang.toLowerCase() === normalizedTarget,
+      ) ??
+      availableVoicesRef.current.find((candidate) =>
+        candidate.lang.toLowerCase().startsWith(`${targetPrefix}-`),
+      ) ??
+      ['en-IN', 'hi', 'en-US']
+        .map((fallback) =>
+          availableVoicesRef.current.find(
+            (candidate) => candidate.lang.toLowerCase() === fallback.toLowerCase(),
+          ),
+        )
+        .find((candidate) => candidate !== undefined) ??
+      availableVoicesRef.current[0];
+
+    utterance.lang = voice?.lang ?? targetLanguage;
+    if (voice) utterance.voice = voice;
+    const clearWatchdog = () => {
+      if (speechWatchdogRef.current !== null) {
+        window.clearTimeout(speechWatchdogRef.current);
+        speechWatchdogRef.current = null;
+      }
+    };
+    const armWatchdog = (timeoutMs: number) => {
+      clearWatchdog();
+      speechWatchdogRef.current = window.setTimeout(() => {
+        if (speechGenerationRef.current !== generation) return;
+        speechGenerationRef.current += 1;
+        synthesis.cancel();
+        setVoiceStatus('idle');
+        setVoiceMessage('Voice playback stalled. Tap Replay Voice to try again.');
+        speechWatchdogRef.current = null;
+      }, timeoutMs);
+    };
+    utterance.onstart = () => {
+      if (speechGenerationRef.current === generation) {
+        setVoiceStatus('speaking');
+        setVoiceMessage('Speaking your answer…');
+        armWatchdog(
+          Math.min(60_000, Math.max(12_000, text.trim().split(/\s+/).length * 500)),
+        );
+      }
+    };
+    utterance.onend = () => {
+      if (speechGenerationRef.current === generation) {
+        clearWatchdog();
+        setVoiceStatus('idle');
+        setVoiceMessage('');
+      }
+    };
+    utterance.onerror = (event) => {
+      if (speechGenerationRef.current === generation) {
+        clearWatchdog();
+        setVoiceStatus('idle');
+        setVoiceMessage(`Voice playback failed (${event.error}). You can tap Replay Voice to try again.`);
+      }
+    };
+
+    try {
+      armWatchdog(10_000);
+      synthesis.speak(utterance);
+    } catch (error) {
+      if (speechGenerationRef.current === generation) {
+        clearWatchdog();
+        setVoiceStatus('idle');
+        setVoiceMessage('Could not start voice playback. Please try again.');
+      }
+      console.error('Could not speak the Sahayak response.', error);
+    }
   };
 
   useEffect(() => {
@@ -180,12 +292,7 @@ export default function AIAssistantModal() {
       { id: `${Date.now()}-user`, role: 'farmer', text: trimmed },
     ]);
     window.setTimeout(() => {
-      const answer = answerQuestion(
-        trimmed,
-        landAcres,
-        farmerCategory,
-        language,
-      );
+      const answer = answerQuestion(trimmed, language);
       setMessages((current) => [
         ...current,
         { id: `${Date.now()}-assistant`, role: 'assistant', text: answer },
@@ -196,6 +303,16 @@ export default function AIAssistantModal() {
   };
 
   const startSpeechInput = () => {
+    if ('speechSynthesis' in window) {
+      speechGenerationRef.current += 1;
+      if (speechWatchdogRef.current !== null) {
+        window.clearTimeout(speechWatchdogRef.current);
+        speechWatchdogRef.current = null;
+      }
+      window.speechSynthesis.cancel();
+      setVoiceStatus('idle');
+    }
+
     const speechWindow = window as SpeechWindow;
     const Recognition =
       speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition;
@@ -211,36 +328,30 @@ export default function AIAssistantModal() {
     recognition.onresult = (event) => {
       const transcript = event.results[0]?.[0]?.transcript ?? '';
       const command = transcript.toLocaleLowerCase();
+      const normalizedCommand = command
+        .trim()
+        .replace(/[?.!]/g, '')
+        .replace(/\s+/g, ' ');
       const hasCommand = (...terms: string[]) =>
-        terms.some((term) => command.includes(term));
-      const destination = hasCommand(
-        'bhav',
-        'prices',
-        'price',
-        'भाव',
-        'भाव सांगा',
-        'बाजार भाव',
-      )
+        terms.some((term) => normalizedCommand.includes(term));
+      const destination =
+        ['prices', 'price', 'bhav', 'bhav sanga', 'भाव', 'भाव सांगा'].includes(
+          normalizedCommand,
+        ) ||
+        hasCommand('open prices', 'open market prices', 'prices page', 'go to prices', 'बाजारभाव उघडा')
         ? { path: '/prices', en: 'Opening market prices.', hi: 'मंडी भाव खोल रहा हूँ।', mr: 'बाजारभाव उघडत आहे.' }
-        : hasCommand(
-              'doctor',
-              'rog',
-              'disease',
-              'रोग',
-              'डॉक्टर',
-              'पीक डॉक्टर',
-            )
+        : ['doctor', 'rog', 'crop doctor', 'रोग', 'डॉक्टर', 'पीक डॉक्टर'].includes(
+              normalizedCommand,
+            ) ||
+            hasCommand('open crop doctor', 'open doctor', 'go to crop doctor')
           ? { path: '/crop-doctor', en: 'Opening Crop Doctor.', hi: 'फसल डॉक्टर खोल रहा हूँ।', mr: 'पीक डॉक्टर उघडत आहे.' }
-          : hasCommand(
-                'calculator',
-                'nafa',
-                'profit',
-                'नफा',
-                'मुनाफा',
-                'गणना',
-              )
+          : ['calculator', 'nafa', 'profit', 'नफा', 'मुनाफा'].includes(
+                normalizedCommand,
+              ) ||
+              hasCommand('open calculator', 'open profit calculator', 'go to calculator')
             ? { path: '/calculator', en: 'Opening the profit calculator.', hi: 'लाभ कैलकुलेटर खोल रहा हूँ।', mr: 'नफा कॅल्क्युलेटर उघडत आहे.' }
-            : hasCommand('auction', 'boli', 'बोली', 'लिलाव')
+            : ['auction', 'boli', 'बोली', 'लिलाव'].includes(normalizedCommand) ||
+                hasCommand('open auction', 'open marketplace', 'go to marketplace')
               ? { path: '/marketplace', en: 'Opening produce auctions.', hi: 'नीलामी खोल रहा हूँ।', mr: 'लिलाव उघडत आहे.' }
               : null;
 
@@ -252,12 +363,7 @@ export default function AIAssistantModal() {
               ? destination.mr
               : destination.en;
         setVoiceMessage(`${confirmation} ${transcript}`);
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(confirmation);
-          utterance.lang = speechLanguage[language] ?? 'en-IN';
-          window.speechSynthesis.speak(utterance);
-        }
+        speakText(confirmation);
         setOpen(false);
         router.push(destination.path);
         return;
@@ -371,9 +477,13 @@ export default function AIAssistantModal() {
                   )}
                 </div>
               ))}
-              {busy && (
+              {(busy || voiceStatus !== 'idle') && (
                 <p role="status" className="text-xs text-[#26352B]/65">
-                  Preparing guidance…
+                  {busy
+                    ? 'Preparing guidance…'
+                    : voiceStatus === 'preparing'
+                      ? 'Preparing spoken guidance…'
+                      : 'Speaking your answer…'}
                 </p>
               )}
             </div>
