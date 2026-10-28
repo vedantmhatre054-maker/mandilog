@@ -13,7 +13,7 @@ export default function AppShell({ children }: AppShellProps) {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#F7F8F2] dark:bg-[#131D16]">
+    <div className="flex min-h-screen bg-[#F7F8F2] dark:bg-[#121B15]">
       <div className="hidden md:flex">
         <Sidebar />
       </div>
@@ -32,7 +32,7 @@ export default function AppShell({ children }: AppShellProps) {
                 type="button"
                 onClick={() => setMobileSidebarOpen(false)}
                 aria-label="Close navigation menu"
-                className="rounded-xl bg-white p-2 text-[#26352B] shadow-sm dark:bg-[#1b2920] dark:text-[#e6ece8]"
+                className="rounded-xl bg-white p-2 text-[#26352B] shadow-sm dark:bg-[#1A281F] dark:text-[#E8EFE4]"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -42,7 +42,7 @@ export default function AppShell({ children }: AppShellProps) {
         </div>
       )}
 
-      <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-[#F7F8F2] dark:bg-[#131D16]">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-[#F7F8F2] dark:bg-[#121B15]">
         <div className="flex items-center gap-2 border-b border-[#DFE5DA] bg-white px-4 py-2 dark:border-[#2A3F32] dark:bg-[#17231B] md:hidden">
           <button
             type="button"
@@ -52,12 +52,14 @@ export default function AppShell({ children }: AppShellProps) {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <span className="font-serif font-semibold text-[#26352B] dark:text-[#e6ece8]">
+          <span className="font-serif font-semibold text-[#26352B] dark:text-[#E8EFE4]">
             Navigation
           </span>
         </div>
         <Navbar />
-        <div className="min-w-0 flex-1">{children}</div>
+        <div className="flex-1 min-w-0 min-h-screen bg-[#F7F8F2] dark:bg-[#121B15] text-[#26352B] dark:text-[#E8EFE4] p-6 lg:p-8 transition-colors duration-200">
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -35,13 +35,13 @@ const farms = [
 export default function FarmsPage() {
   return (
     <AppShell>
-      <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 font-sans text-[#37473C] sm:px-6 lg:px-8 dark:text-[#C8D5CB]">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">
+            <h1 className="font-serif text-3xl tracking-tight text-[#26352B] sm:text-4xl dark:text-[#E8EFE4]">
               My Farms &amp; Crops
             </h1>
-            <p className="mt-2 text-[#26352B]/70">
+            <p className="mt-2 text-sm text-[#5C6E61] dark:text-[#A8B8AC]">
               Track your land parcels, active crops, and harvest dates
             </p>
           </div>
@@ -61,7 +61,7 @@ export default function FarmsPage() {
           {farms.map((farm) => (
             <article
               key={farm.name}
-              className="rounded-2xl border border-[#DFE5DA] bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-[#DFE5DA] bg-white p-6 shadow-sm dark:border-[#2B3E31] dark:bg-[#1A281F]"
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
@@ -87,14 +87,14 @@ export default function FarmsPage() {
                 {[farm.area, farm.soil].map((detail) => (
                   <span
                     key={detail}
-                    className="rounded-full border border-[#DFE5DA] bg-[#F7F8F2] px-3 py-1 text-xs font-medium text-[#26352B]/80"
+                    className="rounded-full border border-[#DFE5DA] bg-[#F7F8F2] px-3 py-1 text-xs font-medium text-[#37473C] dark:border-[#2B3E31] dark:bg-[#121B15] dark:text-[#C8D5CB]"
                   >
                     {detail}
                   </span>
                 ))}
               </div>
 
-              <div className="mt-6 rounded-xl bg-[#F7F8F2] p-4">
+              <div className="mt-6 rounded-xl bg-[#F7F8F2] p-4 dark:bg-[#121B15]">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-medium text-[#26352B]/65">
@@ -124,7 +124,7 @@ export default function FarmsPage() {
                 </p>
               </div>
 
-              <div className="mt-4 flex items-start gap-3 rounded-xl border border-[#DFE5DA] p-4">
+              <div className="mt-4 flex items-start gap-3 rounded-xl border border-[#DFE5DA] p-4 dark:border-[#2B3E31]">
                 <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-[#76A94C]" />
                 <div>
                   <p className="text-xs font-medium text-[#26352B]/65">
@@ -142,7 +142,7 @@ export default function FarmsPage() {
           ))}
         </section>
 
-        <div className="rounded-2xl border border-[#DFE5DA] bg-[#E8EFE4] p-5 sm:p-6">
+        <div className="rounded-2xl border border-[#DFE5DA] bg-[#E8EFE4] p-5 sm:p-6 dark:border-[#2B3E31] dark:bg-[#233529]">
           <Link
             href="/calculator"
             className="group flex flex-wrap items-center justify-between gap-3 font-semibold text-[#246B45]"

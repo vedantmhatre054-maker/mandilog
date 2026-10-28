@@ -83,10 +83,10 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
         href={item.href}
         onClick={onNavigate}
         aria-current={active ? 'page' : undefined}
-        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
           active
-            ? 'bg-[#246B45] text-white dark:bg-[#2E8555]'
-            : 'text-[#26352B]/75 hover:bg-[#E8EFE4] dark:text-[#CAD5CE] dark:hover:bg-[#213327]'
+            ? 'bg-[#246B45] font-semibold text-white shadow-sm dark:bg-[#2E8555]'
+            : 'font-medium text-[#26352B] hover:bg-[#E8EFE4] hover:text-[#246B45] dark:text-[#CAD5CE] dark:hover:bg-[#233529] dark:hover:text-white'
         }`}
       >
         <Icon className="h-[18px] w-[18px] shrink-0" />
@@ -130,7 +130,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
 
         <nav className="space-y-6 font-sans" aria-label="Sidebar navigation">
           <section>
-            <h2 className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#26352B]/45 dark:text-[#CAD5CE]/55">
+            <h2 className="mb-2 px-3 text-xs font-bold uppercase tracking-wider text-[#627768] dark:text-[#7E9685]">
               Main Menu
             </h2>
             <div className="space-y-1">
@@ -139,7 +139,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
           </section>
 
           <section>
-            <h2 className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#26352B]/45 dark:text-[#CAD5CE]/55">
+            <h2 className="mb-2 px-3 text-xs font-bold uppercase tracking-wider text-[#627768] dark:text-[#7E9685]">
               Farm Operations
             </h2>
             <div className="space-y-1">
@@ -148,7 +148,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
           </section>
 
           <section>
-            <h2 className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#26352B]/45 dark:text-[#CAD5CE]/55">
+            <h2 className="mb-2 px-3 text-xs font-bold uppercase tracking-wider text-[#627768] dark:text-[#7E9685]">
               AI Assistant
             </h2>
             <button
@@ -161,7 +161,7 @@ export default function Sidebar({ onNavigate }: SidebarProps) {
                 );
                 onNavigate?.();
               }}
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-[#26352B]/75 transition-colors hover:bg-[#E8EFE4] dark:text-[#CAD5CE] dark:hover:bg-[#213327]"
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-[#26352B] transition-colors hover:bg-[#E8EFE4] hover:text-[#246B45] dark:text-[#CAD5CE] dark:hover:bg-[#233529] dark:hover:text-white"
             >
               <Bot className="h-[18px] w-[18px] shrink-0" />
               <span className="flex-1">Sahayak AI</span>

@@ -182,9 +182,9 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      <main className="mx-auto w-full max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-7xl space-y-8 bg-[#F7F8F2] px-4 py-8 dark:bg-[#121B15] sm:px-6 lg:px-8">
         <header>
-          <h1 className="font-serif text-2xl font-bold tracking-tight">
+          <h1 className="font-serif text-2xl font-bold text-[#26352B] lg:text-3xl dark:text-[#E8EFE4]">
             {greeting}
           </h1>
           <p className="mt-1 text-sm text-[#26352B]/70">

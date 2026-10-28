@@ -62,11 +62,13 @@ export default function HomePage() {
 
   useEffect(() => {
     try {
-      const savedTheme = window.localStorage.getItem('mandilog-theme');
+      const savedTheme =
+        window.localStorage.getItem('theme') ??
+        window.localStorage.getItem('mandilog-theme');
       const nextTheme = savedTheme === 'dark' ? 'dark' : 'light';
       setTheme(nextTheme);
       document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-      document.body.classList.toggle('dark', nextTheme === 'dark');
+      document.body.classList.remove('dark');
     } catch (error) {
       console.error('Could not load the saved theme preference.', error);
     }
@@ -76,16 +78,20 @@ export default function HomePage() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-    document.body.classList.toggle('dark', nextTheme === 'dark');
+    document.body.classList.remove('dark');
     try {
+      window.localStorage.setItem('theme', nextTheme);
       window.localStorage.setItem('mandilog-theme', nextTheme);
     } catch (error) {
       console.error('Could not save the theme preference.', error);
     }
+    window.dispatchEvent(
+      new CustomEvent('mandilog:theme-changed', { detail: nextTheme }),
+    );
   };
 
   return (
-    <main className="min-h-screen bg-[#F7F8F2] font-sans text-[#26352B]">
+    <main className="min-h-screen bg-[#F7F8F2] font-sans text-[#37473C] dark:bg-[#121B15] dark:text-[#C8D5CB]">
       <header className="border-b border-[#DFE5DA] bg-white">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="group flex items-center gap-3">

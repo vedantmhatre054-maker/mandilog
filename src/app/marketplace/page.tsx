@@ -327,15 +327,15 @@ export default function MarketplacePage() {
         {/* Modal for + Create Listing */}
         {showCreateModal && (
           <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-[#FFFFFF] rounded-2xl max-w-md w-full p-6 border border-[#DFE5DA] shadow-xl space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#DFE5DA]">
-                <h3 className="font-serif text-xl font-bold text-[#26352B]">
+            <div className="bg-[#FFFFFF] dark:bg-[#1A281F] rounded-2xl max-w-md w-full p-6 border border-[#DFE5DA] dark:border-[#2B3E31] shadow-xl space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[#DFE5DA] dark:border-[#2B3E31]">
+                <h3 className="font-serif text-xl font-bold text-[#26352B] dark:text-[#E8EFE4]">
                   List Produce for Auction
                 </h3>
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="text-gray-400 hover:text-gray-700 text-lg font-bold"
+                  className="text-[#5C6E61] hover:text-[#246B45] dark:text-[#A8B8AC] dark:hover:text-white text-lg font-bold"
                 >
                   ✕
                 </button>

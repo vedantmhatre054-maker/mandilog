@@ -141,19 +141,19 @@ export default function FarmSetupPage() {
 
   return (
     <AppShell>
-      <main className="mx-auto w-full max-w-4xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-4xl space-y-8 px-4 py-8 font-sans text-[#37473C] sm:px-6 lg:px-8 dark:text-[#C8D5CB]">
         <header>
-          <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">
+          <h1 className="font-serif text-3xl font-bold text-[#26352B] dark:text-[#E8EFE4]">
             Farm Profile &amp; Crop Setup
           </h1>
-          <p className="mt-2 text-[#26352B]/70">
+          <p className="mt-1 font-sans text-sm text-[#5C6E61] dark:text-[#A8B8AC]">
             Save your land and crop details for personalized farm summaries.
           </p>
         </header>
 
         <form
           onSubmit={saveProfile}
-          className="rounded-2xl border border-[#DFE5DA] bg-white p-6 shadow-sm sm:p-8"
+          className="rounded-2xl border border-[#DFE5DA] bg-[#FFFFFF] p-6 shadow-sm dark:border-[#2B3E31] dark:bg-[#1A281F] sm:p-8"
         >
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="space-y-1.5 text-sm font-medium">
@@ -165,7 +165,7 @@ export default function FarmSetupPage() {
                 required
                 value={landAcres}
                 onChange={(event) => setLandAcres(event.target.value)}
-                className="w-full rounded-xl border border-[#DFE5DA] px-3.5 py-3 outline-none focus:border-[#246B45]"
+                className="w-full rounded-xl border border-[#DFE5DA] bg-[#FDFDFD] px-3.5 py-3 text-[#26352B] outline-none focus:ring-2 focus:ring-[#246B45] dark:border-[#2B3E31] dark:bg-[#233529] dark:text-white"
               />
             </label>
             <label className="space-y-1.5 text-sm font-medium">
@@ -174,7 +174,7 @@ export default function FarmSetupPage() {
                 required
                 value={location}
                 onChange={(event) => setLocation(event.target.value)}
-                className="w-full rounded-xl border border-[#DFE5DA] px-3.5 py-3 outline-none focus:border-[#246B45]"
+                className="w-full rounded-xl border border-[#DFE5DA] bg-[#FDFDFD] px-3.5 py-3 text-[#26352B] outline-none focus:ring-2 focus:ring-[#246B45] dark:border-[#2B3E31] dark:bg-[#233529] dark:text-white"
               />
             </label>
             <label className="space-y-1.5 text-sm font-medium">
@@ -182,7 +182,7 @@ export default function FarmSetupPage() {
               <select
                 value={soilType}
                 onChange={(event) => setSoilType(event.target.value)}
-                className="w-full rounded-xl border border-[#DFE5DA] bg-white px-3.5 py-3 outline-none focus:border-[#246B45]"
+                className="w-full rounded-xl border border-[#DFE5DA] bg-[#FDFDFD] px-3.5 py-3 text-[#26352B] outline-none focus:ring-2 focus:ring-[#246B45] dark:border-[#2B3E31] dark:bg-[#233529] dark:text-white"
               >
                 <option>Black Soil</option>
                 <option>Loamy Soil</option>
@@ -195,7 +195,7 @@ export default function FarmSetupPage() {
               <select
                 value={waterSource}
                 onChange={(event) => setWaterSource(event.target.value)}
-                className="w-full rounded-xl border border-[#DFE5DA] bg-white px-3.5 py-3 outline-none focus:border-[#246B45]"
+                className="w-full rounded-xl border border-[#DFE5DA] bg-[#FDFDFD] px-3.5 py-3 text-[#26352B] outline-none focus:ring-2 focus:ring-[#246B45] dark:border-[#2B3E31] dark:bg-[#233529] dark:text-white"
               >
                 <option>Borewell</option>
                 <option>Canal</option>
@@ -207,7 +207,7 @@ export default function FarmSetupPage() {
               <select
                 value={crop}
                 onChange={(event) => setCrop(event.target.value)}
-                className="w-full rounded-xl border border-[#DFE5DA] bg-white px-3.5 py-3 outline-none focus:border-[#246B45]"
+                className="w-full rounded-xl border border-[#DFE5DA] bg-[#FDFDFD] px-3.5 py-3 text-[#26352B] outline-none focus:ring-2 focus:ring-[#246B45] dark:border-[#2B3E31] dark:bg-[#233529] dark:text-white"
               >
                 {Object.keys(cropCycles).map((cropName) => (
                   <option key={cropName}>{cropName}</option>
@@ -221,7 +221,7 @@ export default function FarmSetupPage() {
                 required
                 value={sowingDate}
                 onChange={(event) => setSowingDate(event.target.value)}
-                className="w-full rounded-xl border border-[#DFE5DA] px-3.5 py-3 outline-none focus:border-[#246B45]"
+                className="w-full rounded-xl border border-[#DFE5DA] bg-[#FDFDFD] px-3.5 py-3 text-[#26352B] outline-none focus:ring-2 focus:ring-[#246B45] dark:border-[#2B3E31] dark:bg-[#233529] dark:text-white"
               />
             </label>
           </div>
@@ -239,7 +239,7 @@ export default function FarmSetupPage() {
           )}
         </form>
 
-        <section className="rounded-2xl border border-[#DFE5DA] bg-white p-6 shadow-sm sm:p-8">
+        <section className="rounded-2xl border border-[#DFE5DA] bg-[#FFFFFF] p-6 shadow-sm dark:border-[#2B3E31] dark:bg-[#1A281F] sm:p-8">
           <div>
             <p className="text-sm font-semibold text-[#246B45]">
               General guidance · not a soil test or agronomist recommendation
@@ -249,7 +249,7 @@ export default function FarmSetupPage() {
             </h2>
           </div>
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
-            <article className="rounded-xl bg-[#E8EFE4] p-4">
+            <article className="rounded-xl bg-[#E8EFE4] p-4 dark:bg-[#233529]">
               <h3 className="font-semibold">Next crop rotation</h3>
               <p className="mt-2 text-sm leading-6">
                 {rotationByCrop[crop]}
@@ -259,7 +259,7 @@ export default function FarmSetupPage() {
                 extension officer.
               </p>
             </article>
-            <article className="rounded-xl bg-[#F7F8F2] p-4">
+            <article className="rounded-xl bg-[#F7F8F2] p-4 dark:bg-[#121B15]">
               <h3 className="font-semibold">Fertilizer schedule</h3>
               <p className="mt-2 text-sm leading-6">
                 Plan basal and split N-P-K applications around sowing and crop
@@ -268,7 +268,7 @@ export default function FarmSetupPage() {
                 every plot.
               </p>
             </article>
-            <article className="rounded-xl border border-[#DFE5DA] p-4 sm:col-span-2">
+            <article className="rounded-xl border border-[#DFE5DA] p-4 dark:border-[#2B3E31] sm:col-span-2">
               <h3 className="flex items-center gap-2 font-semibold">
                 <CloudSun className="h-5 w-5 text-[#246B45]" />
                 Weather-informed irrigation
@@ -281,14 +281,14 @@ export default function FarmSetupPage() {
                 type="button"
                 onClick={loadWeatherAdvisory}
                 disabled={weatherLoading || !location.trim()}
-                className="mt-3 rounded-xl border border-[#DFE5DA] bg-[#E8EFE4] px-4 py-2.5 text-sm font-semibold text-[#246B45] disabled:opacity-50"
+                className="mt-3 rounded-xl border border-[#DFE5DA] bg-[#E8EFE4] px-4 py-2.5 text-sm font-semibold text-[#246B45] disabled:opacity-50 dark:border-[#2B3E31] dark:bg-[#233529] dark:text-[#E8EFE4]"
               >
                 {weatherLoading ? 'Checking forecast…' : 'Check weather advisory'}
               </button>
               {weatherAdvisory && (
                 <p
                   role="status"
-                  className="mt-3 rounded-xl bg-[#F7F8F2] p-3 text-sm leading-6"
+                  className="mt-3 rounded-xl bg-[#F7F8F2] p-3 text-sm leading-6 dark:bg-[#121B15]"
                 >
                   {weatherAdvisory}
                 </p>

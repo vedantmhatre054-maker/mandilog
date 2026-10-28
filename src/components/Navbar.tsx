@@ -12,30 +12,50 @@ export default function Navbar() {
   useEffect(() => {
     const applyTheme = (nextTheme: 'light' | 'dark') => {
       document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-      document.body.classList.toggle('dark', nextTheme === 'dark');
+      setTheme(nextTheme);
     };
+    const restoreTheme = () => {
+      const savedTheme =
+        window.localStorage.getItem('theme') ??
+        window.localStorage.getItem('mandilog-theme');
+      applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+    };
+
     try {
-      const savedTheme = window.localStorage.getItem('mandilog-theme');
-      const initialTheme = savedTheme === 'dark' ? 'dark' : 'light';
-      setTheme(initialTheme);
-      applyTheme(initialTheme);
+      restoreTheme();
     } catch (error) {
       console.error('Could not load the saved theme preference.', error);
+      document.documentElement.classList.remove('dark');
       setTheme('light');
-      applyTheme('light');
     }
+
+    const syncTheme = (event: Event) => {
+      const nextTheme = (event as CustomEvent<'light' | 'dark'>).detail;
+      if (nextTheme === 'light' || nextTheme === 'dark') {
+        applyTheme(nextTheme);
+      }
+    };
+    window.addEventListener('mandilog:theme-changed', syncTheme);
+    window.addEventListener('storage', restoreTheme);
+    return () => {
+      window.removeEventListener('mandilog:theme-changed', syncTheme);
+      window.removeEventListener('storage', restoreTheme);
+    };
   }, []);
 
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-    document.body.classList.toggle('dark', nextTheme === 'dark');
     try {
+      window.localStorage.setItem('theme', nextTheme);
       window.localStorage.setItem('mandilog-theme', nextTheme);
     } catch (error) {
       console.error('Could not save the theme preference.', error);
     }
+    window.dispatchEvent(
+      new CustomEvent('mandilog:theme-changed', { detail: nextTheme }),
+    );
   };
 
   return (

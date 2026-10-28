@@ -42,62 +42,59 @@ const speechLanguage: Record<string, string> = {
   mr: 'mr-IN',
 };
 
-function answerQuestion(
-  question: string,
-  acres: number | null,
-  category: string,
-  language: string,
-) {
+function answerQuestion(question: string, language: string) {
   const query = question.toLowerCase();
   const isHindi = language === 'hi';
   const isMarathi = language === 'mr';
 
-  if (/blight|tomato|टमाटर|टोमॅटो|करपा|blight/i.test(query)) {
+  if (/scheme|subsidy|yojana|pm.?kisan|drip|योजना|अनुदान|महाडीबीटी/i.test(query)) {
     if (isHindi) {
-      return 'टमाटर में अर्ली ब्लाइट की पुष्टि केवल तस्वीर से नहीं की जा सकती। पत्तियों को सूखा रखें, संक्रमित पत्ते हटाएँ और स्थानीय कृषि अधिकारी से सलाह लें।';
+      return 'आप PM-Kisan के ₹6,000 वार्षिक लाभ और महाराष्ट्र MahaDBT सिंचाई सहायता के लिए पात्रता जाँच सकते हैं। पात्रता और सब्सिडी की राशि नियमों पर निर्भर करती है। Govt. Schemes टैब में विवरण देखें और आधिकारिक पोर्टल पर पुष्टि करें।';
     }
     if (isMarathi) {
-      return 'फक्त फोटोवरून टोमॅटोवरील अर्ली ब्लाइटची खात्री करता येत नाही. पाने कोरडी ठेवा, बाधित पाने काढा आणि स्थानिक कृषी अधिकाऱ्यांचा सल्ला घ्या.';
+      return 'PM-Kisan च्या वार्षिक ₹6,000 लाभासाठी आणि महाराष्ट्र MahaDBT सिंचन सहाय्यासाठी पात्रता तपासा. पात्रता आणि अनुदानाची रक्कम नियमांवर अवलंबून असते. Govt. Schemes टॅबमध्ये माहिती पाहा आणि अधिकृत पोर्टलवर खात्री करा.';
     }
-    return 'A photo alone cannot confirm early blight. Keep foliage dry, remove visibly affected leaves without composting them, and consult your local agriculture officer before applying any treatment.';
+    return 'You may qualify for PM-Kisan (₹6,000 yearly for eligible families) and Maharashtra MahaDBT drip-irrigation support. Eligibility and subsidy amounts depend on current rules and your application. Open the Govt. Schemes tab for details and confirm on the official portal.';
   }
 
-  if (/rate|price|mandi|भाव|भाव सांगा|दर|किंमत/i.test(query)) {
+  if (/blight|disease|rog|spray|pest|tomato|टमाटर|टोमॅटो|करपा|रोग|फवारणी|कीड/i.test(query)) {
     if (isHindi) {
-      return 'मेरे पास अभी प्रमाणित लाइव मंडी भाव उपलब्ध नहीं हैं। कीमत और तारीख सत्यापित करने के लिए मंडी भाव पेज देखें; उदाहरण डेटा को वर्तमान भाव न मानें।';
+      return 'टमाटर में अर्ली ब्लाइट के लक्षण हों तो प्रभावित पत्तियाँ हटाएँ और पौधों को सूखा रखें। Mancozeb 75% WP का उपयोग केवल फसल के लेबल और स्थानीय कृषि सलाह के अनुसार करें; जैविक विकल्प के रूप में Neem तेल पर विचार करें। विस्तृत जाँच के लिए AI Crop Doctor खोलें।';
     }
     if (isMarathi) {
-      return 'माझ्याकडे सध्या पडताळलेले थेट बाजारभाव उपलब्ध नाहीत. किंमत आणि तारीख तपासण्यासाठी बाजारभाव पेज पाहा; उदाहरण डेटा आजचा भाव समजू नका.';
+      return 'टोमॅटोवर अर्ली ब्लाइटची लक्षणे दिसल्यास बाधित पाने काढा आणि झाडे कोरडी ठेवा. Mancozeb 75% WP फक्त पिकाच्या लेबलवरील सूचनांनुसार आणि स्थानिक कृषी सल्ल्याने वापरा; सेंद्रिय पर्याय म्हणून कडुनिंब तेलाचा विचार करा. तपशीलवार तपासणीसाठी AI Crop Doctor उघडा.';
     }
-    return 'I cannot verify a live mandi quote right now. Check the market prices page and verify its source and reporting date; do not treat demonstration figures as today’s price.';
+    return 'If tomato early blight symptoms are present, remove affected leaves and keep foliage dry. Use Mancozeb 75% WP only as directed on the crop label and with local agricultural guidance; neem oil is an organic option to discuss. Open AI Crop Doctor for a closer symptom check.';
   }
 
-  if (/scheme|subsidy|drip|pm.?kisan|महाडीबीटी|योजना|अनुदान/i.test(query)) {
-    const landContext =
-      acres && acres > 0
-        ? ` Your saved profile shows ${acres} acres and category ${category}.`
-        : '';
+  if (/price|bhav|rate|mandi|junnar|भाव|दर|किंमत|मंडी/i.test(query)) {
     if (isHindi) {
-      return `आप PM-Kisan के ₹6,000 वार्षिक लाभ और MahaDBT सूक्ष्म सिंचाई सहायता के लिए आवेदन की जाँच कर सकते हैं। यह पक्की पात्रता नहीं है; भूमि रिकॉर्ड, श्रेणी और वर्तमान नियम आधिकारिक पोर्टल पर जाँचें: mahadbt.maharashtra.gov.in.${landContext}`;
+      return 'MandiLog पर Junnar ₹2,400 और Pune ₹2,800 प्रति क्विंटल के संदर्भ भाव दिखाए जा सकते हैं; इन्हें आज का लाइव भाव न मानें। तारीख और स्रोत की पुष्टि के लिए Market Prices टैब देखें और खरीद-बिक्री से पहले APMC से जाँचें।';
     }
     if (isMarathi) {
-      return `PM-Kisan च्या ₹6,000 वार्षिक लाभासाठी आणि MahaDBT सूक्ष्म-सिंचन अनुदानासाठी पात्रता तपासू शकता. ही पात्रतेची हमी नाही; जमीन नोंदी, प्रवर्ग आणि सध्याचे नियम अधिकृत पोर्टलवर तपासा: mahadbt.maharashtra.gov.in.${landContext}`;
+      return 'MandiLog वर Junnar ₹2,400 आणि Pune ₹2,800 प्रति क्विंटल असे संदर्भ दर दिसू शकतात; ते आजचे थेट दर आहेत असे समजू नका. तारीख आणि स्रोतासाठी Market Prices टॅब पाहा आणि व्यवहारापूर्वी APMC कडून खात्री करा.';
     }
-    return `You can check possible eligibility for PM-Kisan (₹6,000/year for eligible families) and MahaDBT micro-irrigation support. This is not an eligibility decision; land records, category and current rules must be verified on the official portal: mahadbt.maharashtra.gov.in.${landContext}`;
+    return 'MandiLog may show reference rates of ₹2,400 per quintal in Junnar and ₹2,800 in Pune; these are not verified live prices. Check the Market Prices tab for the source and reporting date, and confirm with the APMC before trading.';
+  }
+
+  if (/hello|namaste|namaskar|madat|help|नमस्ते|नमस्कार|मदत|मदद/i.test(query)) {
+    if (isHindi) {
+      return 'नमस्ते! मैं आपका सहायक खेती सलाहकार हूँ। मंडी भाव, फसल की बीमारी, सरकारी योजनाओं या परिवहन बुकिंग के बारे में पूछें।';
+    }
+    if (isMarathi) {
+      return 'नमस्कार! मी तुमचा सहाय्यक शेती मार्गदर्शक आहे. बाजारभाव, पिकांचे रोग, सरकारी योजना किंवा वाहतूक बुकिंगबद्दल विचारा.';
+    }
+    return 'Namaste! I am your Sahayak farming assistant. Ask me about mandi rates, crop diseases, government subsidies, or transport booking.';
   }
 
   if (/black soil|rabi|काली मिट्टी|रबी|काळी माती/i.test(query)) {
-    const landContext =
-      acres && acres > 0
-        ? ` Your saved farm profile lists ${acres} acres.`
-        : '';
     if (isHindi) {
-      return `काली मिट्टी में रबी की फसल का चुनाव जल निकासी, सिंचाई और स्थानीय मौसम पर निर्भर करता है। गेहूँ या चना पर विचार करने से पहले स्थानीय कृषि सलाह लें।${landContext}`;
+      return 'काली मिट्टी में रबी की फसल जल निकासी, सिंचाई और स्थानीय मौसम पर निर्भर करती है। गेहूँ या चना चुनने से पहले स्थानीय कृषि अधिकारी से सलाह लें।';
     }
     if (isMarathi) {
-      return `रब्बी पिकाची निवड काळ्या मातीतील निचरा, सिंचन आणि स्थानिक हवामानावर अवलंबून असते. गहू किंवा हरभरा निवडण्यापूर्वी स्थानिक कृषी सल्ला घ्या.${landContext}`;
+      return 'काळ्या मातीत रब्बी पीक निवडताना निचरा, सिंचन आणि स्थानिक हवामान विचारात घ्या. गहू किंवा हरभरा निवडण्यापूर्वी स्थानिक कृषी अधिकाऱ्यांचा सल्ला घ्या.';
     }
-    return `Rabi crop choice on black soil depends on drainage, irrigation and local weather. Wheat or chickpea may be options to discuss with your local agriculture extension officer.${landContext}`;
+    return 'Rabi crop choice on black soil depends on drainage, irrigation and local weather. Discuss options such as wheat or chickpea with your local agricultural extension officer.';
   }
 
   if (isHindi) return 'मैं खेती के सामान्य मार्गदर्शन में मदद कर सकता हूँ। अपनी फसल, मिट्टी और समस्या बताएं; महत्वपूर्ण फैसलों के लिए स्थानीय कृषि अधिकारी से पुष्टि करें।';

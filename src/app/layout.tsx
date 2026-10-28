@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[#F7F8F2] text-[#26352B] antialiased selection:bg-[#E8EFE4]">
+      <body className="min-h-screen antialiased selection:bg-[#E8EFE4]">
         <LanguageProvider>
           {children}
           <AIAssistantModal />
